@@ -9,15 +9,20 @@ class ProductPage extends StatelessWidget {
         title: Text('Product Detail'),
       ),
       body: Center(
-          child: Column(
-            children: <Widget>[
-              Text('Details'),
-              RaisedButton(
-                child: Text('Back'),
-                onPressed: () => Navigator.pop(context),
-              )
-            ],
-          )
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Image.asset('assets/food.jpg'),
+            Container(margin: EdgeInsets.only(top: 10.0),),
+            Text('Details'),
+            Container(margin: EdgeInsets.only(top: 10.0),),
+            RaisedButton(
+              color: Theme.of(context).accentColor,
+              child: Text('Back'),
+              onPressed: () => Navigator.pop(context),
+            )
+          ],
+        )
       )
     );
   }
