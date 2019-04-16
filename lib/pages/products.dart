@@ -7,6 +7,7 @@ class ProductsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       drawer: Drawer(
+        elevation: 5.0,
         child: Column(
           children: <Widget>[
             AppBar(
@@ -16,7 +17,7 @@ class ProductsPage extends StatelessWidget {
             ListTile(
               title: Text('Manage Products'),
               onTap: () {
-                Navigator.push(
+                Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
                         builder: (BuildContext context) => ProductsAdmin()

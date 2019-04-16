@@ -1,16 +1,56 @@
 import 'package:flutter/material.dart';
 
-class ProductsAdmin extends StatelessWidget {
+import './products.dart';
+import './product_create.dart';
+import './product_list.dart';
 
+class ProductsAdmin extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Product Admin')
-      ),
-      body: Center(
-        child: Text('Product admin')
-      ),
-    );
+    return DefaultTabController(
+        length: 2,
+        child: Scaffold(
+        drawer: Drawer(
+          elevation: 5.0,
+          child: Column(
+            children: <Widget>[
+              AppBar(
+                automaticallyImplyLeading: false,
+                title: Text('Choose'),
+              ),
+              ListTile(
+                title: Text('All Products'),
+                onTap: () {
+                  Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                          builder: (BuildContext context) => ProductsPage()));
+                },
+              )
+            ],
+          ),
+        ),
+        appBar: AppBar(
+            title: Text('Product Admin'),
+            bottom: TabBar(
+                tabs: <Widget>[
+                  Tab(
+                    icon: Icon(Icons.create),
+                    text: 'Create Product',
+                  ),
+                  Tab(
+                    icon: Icon(Icons.list),
+                    text: 'My products',
+                  )
+                ]
+            ),
+        ),
+        body: TabBarView(
+            children: <Widget>[
+              ProductCreatePage(),
+              ProductListPage()
+            ]
+        ),
+    ));
   }
 }
