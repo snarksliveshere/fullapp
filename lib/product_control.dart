@@ -15,7 +15,7 @@ class ProductControl extends StatelessWidget {
             ),
           ),
           onPressed: () {
-            this.addProduct('Sweets');
+            this.addProduct({'title': 'Chocolate', 'image': 'assets/food.jpg'});
           },
         );
   }
