@@ -34,9 +34,37 @@ class ProductPage extends StatelessWidget {
                 RaisedButton(
                   color: Theme.of(context).accentColor,
                   child: Text('Delete'),
-                  onPressed: () => Navigator.pop(context, true),
+                  // i want execute it when the pressed, so () => _show.., not just _showWarning...
+                  onPressed: () => _showWarningDialog(context)
                 )
               ],
             ))));
+  }
+
+  _showWarningDialog(BuildContext context) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Are u sure'),
+            content: Text('this action cannot be undone'),
+            actions: <Widget>[
+              FlatButton(
+                child: Text('Discard'),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+              FlatButton(
+                child: Text('Continue'),
+                onPressed: () {
+                  Navigator.pop(context);
+                  Navigator.pop(context, true);
+                },
+              ),
+            ],
+          );
+        }
+    );
   }
 }
