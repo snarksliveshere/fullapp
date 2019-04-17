@@ -19,11 +19,8 @@ class Products extends StatelessWidget {
                   child: Text(
                     'details'
                   ),
-                  onPressed: () => Navigator.push<bool>(
-                      context,
-                      MaterialPageRoute(
-                        builder: (BuildContext context) => ProductPage(this.products[index]['title'], this.products[index]['image'])
-                      )
+                  onPressed: () => Navigator.pushNamed<bool>(
+                    context, '/product/' + index.toString()
                   ).then((bool value) {
                     if (value) {
                       this.deleteProduct(index);
