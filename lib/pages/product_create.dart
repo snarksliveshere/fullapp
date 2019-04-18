@@ -91,7 +91,14 @@ class _ProductCreatePageState extends State<ProductCreatePage> {
 
               // without ()  = call on pressed
               onPressed: _submitForm
-            )
+            ),
+//            GestureDetector(
+//              child:  Container(
+//                color: Colors.green,
+//                child: Text('custom button'),
+//              ),
+//              onTap: _submitForm,
+//            )
           ],
         ));
   }
