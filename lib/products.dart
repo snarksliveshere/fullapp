@@ -12,7 +12,15 @@ class Products extends StatelessWidget {
             Image.asset(this.products[index]['image']),
             Padding(
               padding: EdgeInsets.symmetric(vertical: 10.0),
-              child: Text(this.products[index]['title']),
+              child: Text(
+                  this.products[index]['title'],
+                  style: TextStyle(
+                    fontSize: 26.0,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'Oswald'
+
+                  ),
+              ),
             ),
             ButtonBar(
               alignment: MainAxisAlignment.center,
