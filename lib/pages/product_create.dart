@@ -12,9 +12,9 @@ class ProductCreatePage extends StatefulWidget {
 }
 
 class _ProductCreatePageState extends State<ProductCreatePage> {
-  String titleValue;
-  String descriptionValue;
-  double priceValue;
+  String _titleValue;
+  String _descriptionValue;
+  double _priceValue;
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +28,7 @@ class _ProductCreatePageState extends State<ProductCreatePage> {
               ),
               onChanged: (String value) {
                 setState(() {
-                  this.titleValue = value;
+                  this._titleValue = value;
                 });
               },
             ),
@@ -39,7 +39,7 @@ class _ProductCreatePageState extends State<ProductCreatePage> {
               maxLines: 4,
               onChanged: (String value) {
                 setState(() {
-                  this.descriptionValue = value;
+                  this._descriptionValue = value;
                 });
               },
             ),
@@ -50,20 +50,27 @@ class _ProductCreatePageState extends State<ProductCreatePage> {
               keyboardType: TextInputType.number,
               onChanged: (String value) {
                 setState(() {
-                  this.priceValue = double.parse(value);
+                  this._priceValue = double.parse(value);
                 });
               },
             ),
+            // occupied some space ~ height & width
+            SizedBox(
+              height: 10.0,
+            ),
             RaisedButton(
               child: Text('Save'),
+              textColor: Colors.white,
+              color: Theme.of(context).accentColor,
               onPressed: () {
                 final Map<String, dynamic> product = {
-                  'title': this.titleValue,
-                  'description': this.descriptionValue,
-                  'price': this.priceValue,
+                  'title': this._titleValue,
+                  'description': this._descriptionValue,
+                  'price': this._priceValue,
                   'image': 'assets/food.jpg'
                 };
                 widget.addProduct(product);
+                Navigator.pushReplacementNamed(context, '/products');
               },
             )
           ],

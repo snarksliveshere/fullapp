@@ -1,7 +1,15 @@
 import 'package:flutter/material.dart';
-import './products.dart';
 
-class AuthPage extends StatelessWidget {
+class AuthPage extends StatefulWidget {
+  @override
+  State createState() {
+    return _AuthPageState();
+  }
+}
+
+class _AuthPageState extends State<AuthPage> {
+  String _emailValue;
+  String _passwordValue;
 
   @override
   Widget build(BuildContext context) {
@@ -9,14 +17,49 @@ class AuthPage extends StatelessWidget {
       appBar: AppBar(
         title: Text('Login')
       ),
-      body: Center(
-        child: RaisedButton(
-            onPressed: () => {
-              Navigator.pushReplacementNamed(context, '/')
+      body: _authForm()
+    );
+  }
+
+  Widget _authForm() {
+    return Container(
+      margin: EdgeInsets.all(10.0),
+      child: ListView(
+        children: <Widget>[
+          TextField(
+            keyboardType: TextInputType.emailAddress,
+            decoration: InputDecoration(
+              labelText: 'Enter e-mail',
+            ),
+            onChanged: (String value) {
+              setState(() {
+                this._emailValue = value;
+              });
             },
-            child: Text('Login')
-        )
-      ),
+          ),
+          TextField(
+            obscureText: true,
+            decoration: InputDecoration(
+              labelText: 'Enter your password',
+            ),
+            onChanged: (String value) {
+              setState(() {
+                this._passwordValue = value;
+              });
+            },
+          ),
+          SizedBox(height: 10.0),
+          RaisedButton(
+              color: Theme.of(context).primaryColor,
+              textColor: Colors.white,
+              onPressed: () => {
+
+                Navigator.pushReplacementNamed(context, '/products')
+              },
+              child: Text('Login')
+          )
+        ],
+      )
     );
   }
 }

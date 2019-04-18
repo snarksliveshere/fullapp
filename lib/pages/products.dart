@@ -22,7 +22,7 @@ class ProductsPage extends StatelessWidget {
               onTap: () {
                 Navigator.pushReplacementNamed(context, '/admin');
               },
-            )
+            ),
           ],
         ),
       ),
