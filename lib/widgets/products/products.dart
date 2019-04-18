@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import './price_tag.dart';
+import './product_address.dart';
+import './product_title.dart';
 
 class Products extends StatelessWidget {
   final List<Map<String, dynamic>> products;
@@ -15,32 +18,11 @@ class Products extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Flexible(
-                  flex: 10,
-                  child: Text(
-                    this.products[index]['title'],
-                    style: TextStyle(
-                        fontSize: 26.0,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: 'Oswald'),
-                  ),
-                ),
+                ProductTitle(title: this.products[index]['title']),
                 SizedBox(
                   width: 8.0,
                 ),
-                Expanded(
-                  flex: 6,
-                    child: Container(
-                        padding: EdgeInsets.symmetric(
-                            horizontal: 6.0, vertical: 2.5),
-                        decoration: BoxDecoration(
-                          color: Theme.of(context).accentColor,
-                          borderRadius: BorderRadius.circular(5.0),
-                        ),
-                        child: Text(
-                          '\$${this.products[index]['price']}',
-                          style: TextStyle(color: Colors.white),
-                        )))
+              PriceTag(this.products[index]['price'].toString()),
               ],
             )),
         DecoratedBox(
@@ -48,9 +30,8 @@ class Products extends StatelessWidget {
                 border: Border.all(
                     color: Colors.grey, style: BorderStyle.solid, width: 1.0),
                 borderRadius: BorderRadius.circular(6.0)),
-            child: Padding(
-                child: Text('Union Square, San Francisco'),
-                padding: EdgeInsets.symmetric(horizontal: 6.0, vertical: 2.5))),
+            child: ProductAddress()
+        ),
         ButtonBar(
           alignment: MainAxisAlignment.center,
           children: <Widget>[

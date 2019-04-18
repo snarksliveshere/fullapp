@@ -1,5 +1,8 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import '../widgets/products/product_title.dart';
+import '../widgets/products/price_tag.dart';
+import '../widgets/products/product_address.dart';
 
 class ProductPage extends StatelessWidget {
   final String title;
@@ -31,39 +34,15 @@ class ProductPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             Image.asset(this.imageUrl),
-            Container(
-              margin: EdgeInsets.only(top: 10.0),
-              child: Text(
-                this.title,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                    fontSize: 26.0,
-                    fontFamily: 'Oswald',
-                    fontWeight: FontWeight.bold
-                ),
-              ),
-            ),
+            ProductTitle(title: this.title),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               textBaseline: TextBaseline.ideographic,
               crossAxisAlignment: CrossAxisAlignment.baseline,
               children: <Widget>[
-                Text(
-                    'Union Square, San Francisco',
-                    style: TextStyle(
-                      fontFamily: 'Oswald',
-                      color: Colors.grey,
-                      fontWeight: FontWeight.w700
-                    ),
-
-                ),
+                ProductAddress(),
                 Text(' | ', style: TextStyle(color: Colors.grey),),
-                Text(
-                  '\$${this.price}',
-                  style: TextStyle(
-                      fontWeight: FontWeight.w700
-                  ),
-                ),
+                PriceTag(this.price.toString())
               ],
             ),
             Container(
