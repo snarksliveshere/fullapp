@@ -88,8 +88,7 @@ class _ProductCreatePageState extends State<ProductCreatePage> {
             ),
             RaisedButton(
               child: Text('Save'),
-              textColor: Colors.white,
-              color: Theme.of(context).accentColor,
+
               // without ()  = call on pressed
               onPressed: _submitForm
             )
