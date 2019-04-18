@@ -33,35 +33,47 @@ class ProductPage extends StatelessWidget {
             Image.asset(this.imageUrl),
             Container(
               margin: EdgeInsets.only(top: 10.0),
+              child: Text(
+                this.title,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                    fontSize: 26.0,
+                    fontFamily: 'Oswald',
+                    fontWeight: FontWeight.bold
+                ),
+              ),
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
+              textBaseline: TextBaseline.ideographic,
+              crossAxisAlignment: CrossAxisAlignment.baseline,
               children: <Widget>[
-                Flexible(
-                  fit: FlexFit.tight,
-                  flex:8,
-                  child: Text(
-                    this.title,
-                    textAlign: TextAlign.center,
+                Text(
+                    'Union Square, San Francisco',
                     style: TextStyle(
-                      fontSize: 25.0
+                      fontFamily: 'Oswald',
+                      color: Colors.grey,
+                      fontWeight: FontWeight.w700
                     ),
-                  ),
+
                 ),
-                Flexible(
-                  fit: FlexFit.tight,
-                  flex: 4,
-                  child: Text(
-                      '${this.price}',
-                      style: TextStyle(
-                        fontWeight: FontWeight.w900
-                      ),
+                Text(' | ', style: TextStyle(color: Colors.grey),),
+                Text(
+                  '\$${this.price}',
+                  style: TextStyle(
+                      fontWeight: FontWeight.w700
                   ),
                 ),
               ],
             ),
-            SizedBox(height: 5.0,),
-            Text(this.description),
+            Container(
+              padding: EdgeInsets.all(10.0),
+              child: Text(
+                  this.description,
+                  textAlign: TextAlign.center,
+              ),
+//              alignment: Alignment.center,
+            )
           ],
         ));
   }
