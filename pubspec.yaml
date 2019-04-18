@@ -37,6 +37,7 @@ flutter:
   uses-material-design: true
   assets:
     - assets/food.jpg
+    - assets/background.jpg
   fonts:
     - family: Oswald
       fonts:
