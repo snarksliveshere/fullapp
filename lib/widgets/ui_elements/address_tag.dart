@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 
-class ProductAddress extends StatelessWidget {
+class AddressTag extends StatelessWidget {
+  final String _address;
+
+  AddressTag(this._address);
+
   @override
   Widget build(BuildContext context) {
     return Padding(
         child: Text(
-            'Union Square, San Francisco',
+            this._address,
             style: TextStyle(
                 color: Colors.grey,
                 fontWeight: FontWeight.w700

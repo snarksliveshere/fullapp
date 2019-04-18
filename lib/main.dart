@@ -53,7 +53,6 @@ class _MyAppState extends State<MyApp> {
 
       },
       onGenerateRoute: (RouteSettings settings) {
-        debugPrint(this._products.toString());
         final List<String> pathElements = settings.name.split('/'); // '/product' '/' '1'
         if (pathElements[0] != '') {
           return null;

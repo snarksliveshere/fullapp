@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 
-class ProductTitle extends StatelessWidget {
+class TitleDefault extends StatelessWidget {
   final String title;
 
-  ProductTitle({this.title});
+  TitleDefault({this.title});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(top: 10.0),
       child: Text(
         this.title,
         textAlign: TextAlign.center,

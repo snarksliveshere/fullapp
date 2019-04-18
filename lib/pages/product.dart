@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import '../widgets/products/product_title.dart';
+import 'package:fullapp/widgets/ui_elements/title_default.dart';
 import '../widgets/products/price_tag.dart';
-import '../widgets/products/product_address.dart';
+import 'package:fullapp/widgets/ui_elements/address_tag.dart';
 
 class ProductPage extends StatelessWidget {
   final String title;
@@ -16,7 +16,6 @@ class ProductPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return WillPopScope(
         onWillPop: () {
-          print('back button pressed');
           Navigator.pop(context, false);
           return Future.value(false);
         },
@@ -34,13 +33,13 @@ class ProductPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             Image.asset(this.imageUrl),
-            ProductTitle(title: this.title),
+            TitleDefault(title: this.title),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               textBaseline: TextBaseline.ideographic,
               crossAxisAlignment: CrossAxisAlignment.baseline,
               children: <Widget>[
-                ProductAddress(),
+                AddressTag('Union Square, SF'),
                 Text(' | ', style: TextStyle(color: Colors.grey),),
                 PriceTag(this.price.toString())
               ],
