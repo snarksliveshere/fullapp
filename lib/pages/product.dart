@@ -4,8 +4,10 @@ import 'package:flutter/material.dart';
 class ProductPage extends StatelessWidget {
   final String title;
   final String imageUrl;
+  final String description;
+  final double price;
 
-  ProductPage(this.title, this.imageUrl);
+  ProductPage(this.title, this.imageUrl, this.description, this.price);
 
   @override
   Widget build(BuildContext context) {
@@ -19,26 +21,49 @@ class ProductPage extends StatelessWidget {
             appBar: AppBar(
               title: Text(this.title),
             ),
-            body: Center(
-                child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
+            body: _showProductAttributes(context)
+        ));
+  }
+
+  Widget _showProductAttributes(BuildContext context) {
+    return Center(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Image.asset(this.imageUrl),
+            Container(
+              margin: EdgeInsets.only(top: 10.0),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Image.asset(this.imageUrl),
-                Container(
-                  margin: EdgeInsets.only(top: 10.0),
+                Flexible(
+                  fit: FlexFit.tight,
+                  flex:8,
+                  child: Text(
+                    this.title,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 25.0
+                    ),
+                  ),
                 ),
-                Text(this.title),
-                Container(
-                  margin: EdgeInsets.only(top: 10.0),
+                Flexible(
+                  fit: FlexFit.tight,
+                  flex: 4,
+                  child: Text(
+                      '${this.price}',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w900
+                      ),
+                  ),
                 ),
-                RaisedButton(
-                  color: Theme.of(context).accentColor,
-                  child: Text('Delete'),
-                  // i want execute it when the pressed, so () => _show.., not just _showWarning...
-                  onPressed: () => _showWarningDialog(context)
-                )
               ],
-            ))));
+            ),
+            SizedBox(height: 5.0,),
+            Text(this.description),
+          ],
+        ));
   }
 
   _showWarningDialog(BuildContext context) {

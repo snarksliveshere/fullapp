@@ -53,6 +53,7 @@ class _MyAppState extends State<MyApp> {
 
       },
       onGenerateRoute: (RouteSettings settings) {
+        debugPrint(this._products.toString());
         final List<String> pathElements = settings.name.split('/'); // '/product' '/' '1'
         if (pathElements[0] != '') {
           return null;
@@ -60,7 +61,12 @@ class _MyAppState extends State<MyApp> {
         if (pathElements[1] == 'product') {
           final int index = int.parse(pathElements[2]);
           return  MaterialPageRoute<bool>(
-              builder: (BuildContext context) => ProductPage(this._products[index]['title'], this._products[index]['image'])
+              builder: (BuildContext context) => ProductPage(
+                  this._products[index]['title'],
+                  this._products[index]['image'],
+                  this._products[index]['description'],
+                  this._products[index]['price'],
+              )
           );
         }
         return null;
