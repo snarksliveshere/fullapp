@@ -23,41 +23,47 @@ class ProductPage extends StatelessWidget {
             appBar: AppBar(
               title: Text(this.title),
             ),
-            body: _showProductAttributes(context)
-        ));
+            body: _showProductAttributes(context)));
+  }
+
+  Widget _buildAddressPriceRow() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      textBaseline: TextBaseline.ideographic,
+      crossAxisAlignment: CrossAxisAlignment.baseline,
+      children: <Widget>[
+        AddressTag('Union Square, SF'),
+        Text(
+          ' | ',
+          style: TextStyle(color: Colors.grey),
+        ),
+        PriceTag(this.price.toString())
+      ],
+    );
   }
 
   Widget _showProductAttributes(BuildContext context) {
     return Center(
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Image.asset(this.imageUrl),
-            TitleDefault(title: this.title),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              textBaseline: TextBaseline.ideographic,
-              crossAxisAlignment: CrossAxisAlignment.baseline,
-              children: <Widget>[
-                AddressTag('Union Square, SF'),
-                Text(' | ', style: TextStyle(color: Colors.grey),),
-                PriceTag(this.price.toString())
-              ],
-            ),
-            Container(
-              padding: EdgeInsets.all(10.0),
-              child: Text(
-                  this.description,
-                  textAlign: TextAlign.center,
-              ),
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: <Widget>[
+        Image.asset(this.imageUrl),
+        TitleDefault(title: this.title),
+        _buildAddressPriceRow(),
+        Container(
+          padding: EdgeInsets.all(10.0),
+          child: Text(
+            this.description,
+            textAlign: TextAlign.center,
+          ),
 //              alignment: Alignment.center,
-            )
-          ],
-        ));
+        )
+      ],
+    ));
   }
 
   _showWarningDialog(BuildContext context) {
-      showDialog(
+    showDialog(
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
@@ -79,7 +85,6 @@ class ProductPage extends StatelessWidget {
               ),
             ],
           );
-        }
-    );
+        });
   }
 }

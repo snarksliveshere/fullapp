@@ -17,63 +17,78 @@ class _AuthPageState extends State<AuthPage> {
     return Scaffold(appBar: AppBar(title: Text('Login')), body: _authForm());
   }
 
+  DecorationImage _buildBackgroundImage() {
+    return DecorationImage(
+        image: AssetImage('assets/background.jpg'),
+        fit: BoxFit.cover,
+        colorFilter:
+            ColorFilter.mode(Colors.black.withOpacity(0.2), BlendMode.dstATop));
+  }
+
+  Widget _buildEmailTextField() {
+    return TextField(
+      keyboardType: TextInputType.emailAddress,
+      decoration: InputDecoration(
+          labelText: 'Enter e-mail', filled: true, fillColor: Colors.white),
+      onChanged: (String value) {
+        setState(() {
+          this._emailValue = value;
+        });
+      },
+    );
+  }
+
+  Widget _buildPasswordTextField() {
+    return TextField(
+      obscureText: true,
+      decoration: InputDecoration(
+          labelText: 'Enter your password',
+          filled: true,
+          fillColor: Colors.white),
+      onChanged: (String value) {
+        setState(() {
+          this._passwordValue = value;
+        });
+      },
+    );
+  }
+
+  Widget _buildAcceptSwitch() {
+    return SwitchListTile(
+        title: Text('Accept terms'),
+        value: _acceptTerms,
+        onChanged: (bool value) {
+          setState(() {
+            this._acceptTerms = value;
+          });
+        });
+  }
+
+  void _submitForm() {
+    debugPrint(this._emailValue);
+    debugPrint(this._passwordValue);
+    Navigator.pushReplacementNamed(context, '/products');
+  }
+
   Widget _authForm() {
     return Container(
-        decoration: BoxDecoration(
-            image: DecorationImage(
-                image: AssetImage('assets/background.jpg'),
-                fit: BoxFit.cover,
-                colorFilter: ColorFilter.mode(
-                    Colors.black.withOpacity(0.2), BlendMode.dstATop))),
+        decoration: BoxDecoration(image: _buildBackgroundImage()),
         padding: EdgeInsets.all(10.0),
         child: Center(
             child: SingleChildScrollView(
                 child: Column(
           children: <Widget>[
-            TextField(
-              keyboardType: TextInputType.emailAddress,
-              decoration: InputDecoration(
-                labelText: 'Enter e-mail',
-                filled: true,
-                fillColor: Colors.white
-              ),
-              onChanged: (String value) {
-                setState(() {
-                  this._emailValue = value;
-                });
-              },
+            _buildEmailTextField(),
+            SizedBox(
+              height: 10.0,
             ),
-            SizedBox(height: 10.0,),
-            TextField(
-              obscureText: true,
-              decoration: InputDecoration(
-                labelText: 'Enter your password',
-                filled: true,
-                fillColor: Colors.white
-              ),
-              onChanged: (String value) {
-                setState(() {
-                  this._passwordValue = value;
-                });
-              },
-            ),
-            SwitchListTile(
-                title: Text('Accept terms'),
-                value: _acceptTerms,
-                onChanged: (bool value) {
-                  setState(() {
-                    this._acceptTerms = value;
-                  });
-                }),
+            _buildPasswordTextField(),
+            _buildAcceptSwitch(),
             SizedBox(height: 10.0),
             RaisedButton(
                 color: Theme.of(context).primaryColor,
                 textColor: Colors.white,
-                onPressed: () => {
-                      debugPrint(this._emailValue),
-                      debugPrint(this._passwordValue),
-                      Navigator.pushReplacementNamed(context, '/products')
-                    },
+                onPressed: _submitForm,
                 child: Text('Login'))
           ],
         ))));

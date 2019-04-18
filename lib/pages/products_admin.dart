@@ -9,29 +9,33 @@ class ProductsAdmin extends StatelessWidget {
 
   ProductsAdmin(this.addProduct, this.deleteProduct);
 
+  Widget _buildSideDrawer(BuildContext context) {
+    return Drawer(
+      elevation: 5.0,
+      child: Column(
+        children: <Widget>[
+          AppBar(
+            automaticallyImplyLeading: false,
+            title: Text('Choose'),
+          ),
+          ListTile(
+            leading: Icon(Icons.shop),
+            title: Text('All Products'),
+            onTap: () {
+              Navigator.pushReplacementNamed(context, '/products');
+            },
+          )
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
         length: 2,
         child: Scaffold(
-        drawer: Drawer(
-          elevation: 5.0,
-          child: Column(
-            children: <Widget>[
-              AppBar(
-                automaticallyImplyLeading: false,
-                title: Text('Choose'),
-              ),
-              ListTile(
-                leading: Icon(Icons.shop),
-                title: Text('All Products'),
-                onTap: () {
-                  Navigator.pushReplacementNamed(context, '/products');
-                },
-              )
-            ],
-          ),
-        ),
+        drawer: _buildSideDrawer(context),
         appBar: AppBar(
             title: Text('Product Admin'),
             bottom: TabBar(
