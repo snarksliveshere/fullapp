@@ -120,16 +120,11 @@ class _ProductEditPageState extends State<ProductEditPage> {
     );
   }
 
-  @override
-  Widget build(BuildContext context) {
-    final double deviceWidth = MediaQuery
-        .of(context
-    )
-        .size
-        .width;
+  Widget _buildPageContent(BuildContext context) {
+    final double deviceWidth = MediaQuery.of(context).size.width;
     final double targetWidth = deviceWidth > 550.0 ? 500.0 : deviceWidth * 0.95;
     final double targetPadding = deviceWidth - targetWidth;
-    final Widget pageContent = Container(
+    return Container(
         width: targetWidth,
         margin: EdgeInsets.all(10.0
         ),
@@ -163,6 +158,11 @@ class _ProductEditPageState extends State<ProductEditPage> {
             )
         )
     );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final Widget pageContent = _buildPageContent(context);
 
     return widget.product == null
         ? pageContent
