@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 //import 'package:flutter/rendering.dart';
 
+import 'package:scoped_model/scoped_model.dart';
+import './scoped_models/products.dart';
+
 import './pages/auth.dart';
 import './pages/products_admin.dart';
 import './pages/products.dart';
@@ -22,52 +25,55 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-//      debugShowMaterialGrid: true,
-      theme: ThemeData(
+  ThemeData _appConfig() {
+    return ThemeData(
         brightness: Brightness.light,
         primarySwatch: Colors.deepOrange,
         accentColor: Colors.deepPurple,
         backgroundColor: Colors.white,
         buttonColor: Colors.blue,
         buttonTheme: ButtonThemeData(
-          textTheme: ButtonTextTheme.accent
+            textTheme: ButtonTextTheme.accent
 //          textTheme: TextTheme(button: TextStyle(color: Colors.white))
         )
 //        fontFamily: 'Oswald'
-      ),
-//      home: AuthPage(),
-      routes: {
-        '/': (BuildContext context) => AuthPage(),
-        '/products': (BuildContext context) => ProductsPage(_products),
-        '/admin': (BuildContext context) => ProductsAdmin( _addProduct, _updateProduct, _deleteProduct, _products),
+    );
+  }
 
-      },
-      onGenerateRoute: (RouteSettings settings) {
-        final List<String> pathElements = settings.name.split('/'); // '/product' '/' '1'
-        if (pathElements[0] != '') {
+
+  @override
+  Widget build(BuildContext context) {
+    return ScopedModel<ProductsModel>(
+      model: ProductsModel(),
+      child: MaterialApp(
+//      debugShowMaterialGrid: true,
+        theme: _appConfig(),
+//      home: AuthPage(),
+        routes: {
+          '/': (BuildContext context) => AuthPage(),
+          '/products': (BuildContext context) => ProductsPage(),
+          '/admin': (BuildContext context) => ProductsAdmin(),
+
+        },
+        onGenerateRoute: (RouteSettings settings) {
+          final List<String> pathElements = settings.name.split('/'); // '/product' '/' '1'
+          if (pathElements[0] != '') {
+            return null;
+          }
+          if (pathElements[1] == 'product') {
+            final int index = int.parse(pathElements[2]);
+            return  MaterialPageRoute<bool>(
+                builder: (BuildContext context) => ProductPage(null, null, null, null)
+            );
+          }
           return null;
-        }
-        if (pathElements[1] == 'product') {
-          final int index = int.parse(pathElements[2]);
-          return  MaterialPageRoute<bool>(
-              builder: (BuildContext context) => ProductPage(
-                  this._products[index].title,
-                  this._products[index].image,
-                  this._products[index].description,
-                  this._products[index].price,
-              )
+        },
+        onUnknownRoute: (RouteSettings settings) {
+          return MaterialPageRoute(
+              builder:  (BuildContext context) => ProductsPage()
           );
-        }
-        return null;
-      },
-      onUnknownRoute: (RouteSettings settings) {
-        return MaterialPageRoute(
-                builder:  (BuildContext context) => ProductsPage(_products)
-        );
-      },
+        },
+      ),
     );
   }
 }
