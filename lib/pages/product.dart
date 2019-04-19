@@ -1,65 +1,81 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:scoped_model/scoped_model.dart';
+import '../models/product.dart';
+import '../scoped_models/products.dart';
 import 'package:fullapp/widgets/ui_elements/title_default.dart';
 import '../widgets/products/price_tag.dart';
 import 'package:fullapp/widgets/ui_elements/address_tag.dart';
 
 class ProductPage extends StatelessWidget {
-  final String title;
-  final String imageUrl;
-  final String description;
-  final double price;
+  final int productIndex;
 
-  ProductPage(this.title, this.imageUrl, this.description, this.price);
+  ProductPage(this.productIndex);
 
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
         onWillPop: () {
-          Navigator.pop(context, false);
-          return Future.value(false);
+          Navigator.pop(context, false
+          );
+          return Future.value(false
+          );
         },
-        child: Scaffold(
-            appBar: AppBar(
-              title: Text(this.title),
-            ),
-            body: _showProductAttributes(context)));
+        child: ScopedModelDescendant<ProductsModel>(
+          builder: (BuildContext context, Widget child, ProductsModel model) {
+            final Product product = model.products[this.productIndex];
+
+            return Scaffold(
+              appBar: AppBar(title: Text(product.title)),
+              body: _showProductAttributes(context, product),
+            );
+          },
+        ),
+    );
   }
 
-  Widget _buildAddressPriceRow() {
+  Widget _buildAddressPriceRow(double price) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       textBaseline: TextBaseline.ideographic,
       crossAxisAlignment: CrossAxisAlignment.baseline,
       children: <Widget>[
-        AddressTag('Union Square, SF'),
+        AddressTag('Union Square, SF'
+        ),
         Text(
           ' | ',
-          style: TextStyle(color: Colors.grey),
+          style: TextStyle(color: Colors.grey
+          ),
         ),
-        PriceTag(this.price.toString())
+        PriceTag(price.toString()
+        )
       ],
     );
   }
 
-  Widget _showProductAttributes(BuildContext context) {
+  Widget _showProductAttributes(BuildContext context, Product product) {
     return Center(
         child: Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: <Widget>[
-        Image.asset(this.imageUrl),
-        TitleDefault(title: this.title),
-        _buildAddressPriceRow(),
-        Container(
-          padding: EdgeInsets.all(10.0),
-          child: Text(
-            this.description,
-            textAlign: TextAlign.center,
-          ),
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Image.asset(product.image
+            ),
+            TitleDefault(title: product.title
+            ),
+            _buildAddressPriceRow(product.price
+            ),
+            Container(
+              padding: EdgeInsets.all(10.0
+              ),
+              child: Text(
+                product.description,
+                textAlign: TextAlign.center,
+              ),
 //              alignment: Alignment.center,
+            )
+          ],
         )
-      ],
-    ));
+    );
   }
 
   _showWarningDialog(BuildContext context) {
@@ -67,24 +83,32 @@ class ProductPage extends StatelessWidget {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text('Are u sure'),
-            content: Text('this action cannot be undone'),
+            title: Text('Are u sure'
+            ),
+            content: Text('this action cannot be undone'
+            ),
             actions: <Widget>[
               FlatButton(
-                child: Text('Discard'),
+                child: Text('Discard'
+                ),
                 onPressed: () {
-                  Navigator.pop(context);
+                  Navigator.pop(context
+                  );
                 },
               ),
               FlatButton(
-                child: Text('Continue'),
+                child: Text('Continue'
+                ),
                 onPressed: () {
-                  Navigator.pop(context);
-                  Navigator.pop(context, true);
+                  Navigator.pop(context
+                  );
+                  Navigator.pop(context, true
+                  );
                 },
               ),
             ],
           );
-        });
+        }
+    );
   }
 }
