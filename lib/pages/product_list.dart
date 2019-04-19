@@ -4,9 +4,10 @@ import './product_edit.dart';
 
 class ProductListPage extends StatelessWidget {
   final Function updateProduct;
+  final Function deleteProduct;
   final List<Map<String, dynamic>> products;
 
-  ProductListPage(this.products, this.updateProduct);
+  ProductListPage(this.products, this.updateProduct, this.deleteProduct);
 
   @override
   Widget build(BuildContext context) {
@@ -15,6 +16,15 @@ class ProductListPage extends StatelessWidget {
         return Dismissible(
           // title at now
           key: Key(products[index]['title']),
+          onDismissed: (DismissDirection direction) {
+            if (direction == DismissDirection.endToStart) {
+              deleteProduct(index);
+            } else if(direction == DismissDirection.startToEnd) {
+              print('swipe se');
+            } else {
+              print('swipe other');
+            }
+          },
           background: Container(
             color: Colors.red,
             child: Text('REMOVING....', textAlign: TextAlign.center,)
