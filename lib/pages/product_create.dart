@@ -15,13 +15,14 @@ class _ProductCreatePageState extends State<ProductCreatePage> {
   String _titleValue;
   String _descriptionValue;
   double _priceValue;
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   Widget _buildTitleTextField() {
-    return TextField(
+    return TextFormField(
       decoration: InputDecoration(
         labelText: 'Product title',
       ),
-      onChanged: (String value) {
+      onSaved: (String value) {
         setState(() {
           this._titleValue = value;
         });
@@ -30,12 +31,12 @@ class _ProductCreatePageState extends State<ProductCreatePage> {
   }
 
   Widget _buildDescriptionTextField() {
-    return TextField(
+    return TextFormField(
       decoration: InputDecoration(
         labelText: 'Product description',
       ),
       maxLines: 4,
-      onChanged: (String value) {
+      onSaved: (String value) {
         setState(() {
           this._descriptionValue = value;
         });
@@ -44,12 +45,12 @@ class _ProductCreatePageState extends State<ProductCreatePage> {
   }
 
   Widget _buildPriceTextField() {
-    return TextField(
+    return TextFormField(
       decoration: InputDecoration(
         labelText: 'Product price',
       ),
       keyboardType: TextInputType.number,
-      onChanged: (String value) {
+      onSaved: (String value) {
         setState(() {
           this._priceValue = double.parse(value);
         });
@@ -58,48 +59,49 @@ class _ProductCreatePageState extends State<ProductCreatePage> {
   }
 
   void _submitForm() {
-      final Map<String, dynamic> product = {
-        'title': this._titleValue,
-        'description': this._descriptionValue,
-        'price': this._priceValue,
-        'image': 'assets/food.jpg'
-      };
-      widget.addProduct(product);
-      Navigator.pushReplacementNamed(context, '/products');
+    _formKey.currentState.save();
+    final Map<String, dynamic> product = {
+      'title': this._titleValue,
+      'description': this._descriptionValue,
+      'price': this._priceValue,
+      'image': 'assets/food.jpg'
+    };
+    widget.addProduct(product);
+    Navigator.pushReplacementNamed(context, '/products');
   }
 
   @override
   Widget build(BuildContext context) {
-    final double deviceWidth =  MediaQuery.of(context).size.width;
-    final double targetWidth = deviceWidth > 550.0 ? 500.0 :  deviceWidth * 0.95;
+    final double deviceWidth = MediaQuery.of(context).size.width;
+    final double targetWidth = deviceWidth > 550.0 ? 500.0 : deviceWidth * 0.95;
     final double targetPadding = deviceWidth - targetWidth;
     return Container(
-      width: targetWidth,
+        width: targetWidth,
         margin: EdgeInsets.all(10.0),
-        child: ListView(
-          padding: EdgeInsets.symmetric(horizontal: targetPadding / 2),
-          children: <Widget>[
-            _buildTitleTextField(),
-            _buildDescriptionTextField(),
-            _buildPriceTextField(),
-            // occupied some space ~ height & width
-            SizedBox(
-              height: 10.0,
-            ),
-            RaisedButton(
-              child: Text('Save'),
-
-              // without ()  = call on pressed
-              onPressed: _submitForm
-            ),
-//            GestureDetector(
-//              child:  Container(
-//                color: Colors.green,
-//                child: Text('custom button'),
-//              ),
-//              onTap: _submitForm,
-//            )
-          ],
-        ));
+        child: Form(
+            key: _formKey,
+            child: ListView(
+              padding: EdgeInsets.symmetric(horizontal: targetPadding / 2),
+              children: <Widget>[
+                _buildTitleTextField(),
+                _buildDescriptionTextField(),
+                _buildPriceTextField(),
+                // occupied some space ~ height & width
+                SizedBox(
+                  height: 10.0,
+                ),
+                RaisedButton(
+                    child: Text('Save'),
+                    // without ()  = call on pressed
+                    onPressed: _submitForm),
+    //            GestureDetector(
+    //              child:  Container(
+    //                color: Colors.green,
+    //                child: Text('custom button'),
+    //              ),
+    //              onTap: _submitForm,
+    //            )
+              ],
+        )));
   }
 }
