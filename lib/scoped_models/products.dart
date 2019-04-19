@@ -5,9 +5,20 @@ import '../models/product.dart';
 class ProductsModel extends Model {
   List<Product> _products = [];
   int _selectedProductIndex;
+  bool _showFavorites = false;
 
   List<Product> get products {
     // cause i don`t want return a Pointer! - we wouldn`t edit the original list
+    return List.from(_products);
+  }
+
+  bool get displayFavoritesOnly => _showFavorites;
+
+  List<Product> get displayedProducts {
+    if (_showFavorites) {
+      // toList - where method return Iterable, I need a List
+      return _products.where((Product product) => product.isFavorite).toList();
+    }
     return List.from(_products);
   }
 
@@ -40,6 +51,7 @@ class ProductsModel extends Model {
 
   void selectProduct(int index) {
     _selectedProductIndex = index;
+    notifyListeners();
   }
 
   void toggleProductFavoriteStatus() {
@@ -54,6 +66,12 @@ class ProductsModel extends Model {
     );
     _products[_selectedProductIndex] = updateProduct;
     _selectedProductIndex = null;
+    notifyListeners();
+    _selectedProductIndex = null;
+  }
+
+  void toggleDisplayMode() {
+    _showFavorites = !_showFavorites;
     notifyListeners();
   }
 }
