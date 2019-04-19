@@ -8,9 +8,15 @@ class AuthPage extends StatefulWidget {
 }
 
 class _AuthPageState extends State<AuthPage> {
-  String _emailValue;
-  String _passwordValue;
-  bool _acceptTerms = false;
+  static const String EMAIL = 'email';
+  static const String PASSWORD = 'password';
+  static const String ACCEPT_TERMS = 'acceptTerms';
+
+  final Map<String, dynamic> _formData = {
+    EMAIL: null,
+    PASSWORD: null,
+    ACCEPT_TERMS: false
+  };
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
@@ -38,7 +44,7 @@ class _AuthPageState extends State<AuthPage> {
         }
       },
       onSaved: (String value) {
-        this._emailValue = value;
+        _formData[EMAIL] = value;
       },
     );
   }
@@ -52,30 +58,35 @@ class _AuthPageState extends State<AuthPage> {
           fillColor: Colors.white
       ),
       validator: (String value) {
-        if (value.isEmpty || value.length <= 4 ) {
-          return 'Title is required and should be 5+ characters long';
+        if (value.isEmpty || value.length < 5 ) {
+          return 'Password is required and should be 5+ characters long';
         }
       },
       onSaved: (String value) {
-        this._passwordValue = value;
+        _formData[PASSWORD] = value;
       }
     );
   }
 
   Widget _buildAcceptSwitch() {
     return SwitchListTile(
-        subtitle: _acceptTerms ?  Text('') : Text('Must be accepted', style: TextStyle(color: Colors.red),),
-        title: Text('Accept terms'),
-        value: _acceptTerms,
+        subtitle: _formData[ACCEPT_TERMS]
+            ? Text('')
+            : Text(
+                'Must be accepted',
+                style: TextStyle(color: Colors.red),
+              ),
+        title: Text(ACCEPT_TERMS),
+        value: _formData[ACCEPT_TERMS],
         onChanged: (bool value) {
           setState(() {
-            this._acceptTerms = value;
+            _formData[ACCEPT_TERMS] = value;
           });
         });
   }
 
   void _submitForm() {
-    if (!_formKey.currentState.validate() || !_acceptTerms) {
+    if (!_formKey.currentState.validate() || !_formData[ACCEPT_TERMS]) {
       return;
     }
     _formKey.currentState.save();
@@ -87,15 +98,15 @@ class _AuthPageState extends State<AuthPage> {
 //    final orientation = MediaQuery.of(context).orientation = Orientation.landscape
     final double deviceWidth = MediaQuery.of(context).size.width;
     final double targetWidth = deviceWidth > 550.0 ? 500.0 : deviceWidth * 0.95;
-    return Form(
-      key: _formKey,
-      child: Container(
-        decoration: BoxDecoration(image: _buildBackgroundImage()),
-        padding: EdgeInsets.all(10.0),
-        child: Center(
-          child: SingleChildScrollView(
-            child: Container(
-              width: targetWidth,
+    return Container(
+      decoration: BoxDecoration(image: _buildBackgroundImage()),
+      padding: EdgeInsets.all(10.0),
+      child: Center(
+        child: SingleChildScrollView(
+          child: Container(
+            width: targetWidth,
+            child: Form(
+              key: _formKey,
               child: Column(
                 children: <Widget>[
                   _buildEmailTextField(),
