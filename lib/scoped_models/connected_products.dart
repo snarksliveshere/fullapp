@@ -79,8 +79,19 @@ mixin ProductsModel on ConnectedProductsModel {
   }
 
   void deleteProduct() {
+    _isLoading = true;
+    final deletedProductId = selectedProduct.id;
     _products.removeAt(selectedProductIndex);
+    _selfProductIndex = null;
     notifyListeners();
+    http.delete(
+        '${ConnectedProductsModel.serverUrl}/products/${deletedProductId}.json'
+    )
+        .then((http.Response response) {
+        _isLoading = false;
+
+        notifyListeners();
+    });
   }
 
   void fetchProducts() {
