@@ -8,9 +8,9 @@ import '../widgets/products/price_tag.dart';
 import 'package:fullapp/widgets/ui_elements/address_tag.dart';
 
 class ProductPage extends StatelessWidget {
-  final int productIndex;
+  final Product product;
 
-  ProductPage(this.productIndex);
+  ProductPage(this.product);
 
   @override
   Widget build(BuildContext context) {
@@ -21,15 +21,9 @@ class ProductPage extends StatelessWidget {
           return Future.value(false
           );
         },
-        child: ScopedModelDescendant<MainModel>(
-          builder: (BuildContext context, Widget child, MainModel model) {
-            final Product product = model.allProducts[this.productIndex];
-
-            return Scaffold(
+        child: Scaffold(
               appBar: AppBar(title: Text(product.title)),
               body: _showProductAttributes(context, product),
-            );
-          },
         ),
     );
   }
@@ -58,7 +52,11 @@ class ProductPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            Image.network(product.image
+            FadeInImage(
+              image: NetworkImage(product.image),
+              placeholder: AssetImage('assets/background.jpg'),
+              height: 300.0,
+              fit: BoxFit.cover,
             ),
             TitleDefault(title: product.title
             ),
