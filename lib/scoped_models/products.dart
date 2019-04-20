@@ -1,15 +1,14 @@
 import 'package:scoped_model/scoped_model.dart';
 
 import '../models/product.dart';
+import './connected_products.dart';
 
-mixin ProductsModel on Model {
-  List<Product> _products = [];
-  int _selectedProductIndex;
+mixin ProductsModel on ConnectedProducts {
   bool _showFavorites = false;
 
-  List<Product> get products {
+  List<Product> get allProducts {
     // cause i don`t want return a Pointer! - we wouldn`t edit the original list
-    return List.from(_products);
+    return List.from(products);
   }
 
   bool get displayFavoritesOnly => _showFavorites;
@@ -17,57 +16,61 @@ mixin ProductsModel on Model {
   List<Product> get displayedProducts {
     if (_showFavorites) {
       // toList - where method return Iterable, I need a List
-      return _products.where((Product product) => product.isFavorite).toList();
+      return products.where((Product product) => product.isFavorite).toList();
     }
-    return List.from(_products);
+    return List.from(products);
   }
 
-  int get selectedProductIndex => _selectedProductIndex;
+  int get selectedProductIndex => selfProductIndex;
 
   Product get selectedProduct {
-    if (_selectedProductIndex == null) {
+    if (selectedProductIndex == null) {
       return null;
     }
-    return _products[_selectedProductIndex];
-  }
-
-  void addProduct(Product product) {
-    _products.add(product);
-    _selectedProductIndex = null;
-    notifyListeners();
+    return products[selectedProductIndex];
   }
 
   void deleteProduct() {
-    _products.removeAt(_selectedProductIndex);
-    _selectedProductIndex = null;
+    products.removeAt(selectedProductIndex);
+    selfProductIndex = null;
     notifyListeners();
   }
 
-  void updateProduct(Product product) {
-    _products[_selectedProductIndex] = product;
-    _selectedProductIndex = null;
+  void updateProduct(String title, String description, String image, double price) {
+    final Product udpatedProduct = Product(
+        title: title,
+        description: description,
+        price: price,
+        image: image,
+        userEmail: selectedProduct.userEmail,
+        userId: selectedProduct.userId
+    );
+    products[selectedProductIndex] = udpatedProduct;
+    selfProductIndex = null;
     notifyListeners();
   }
 
   void selectProduct(int index) {
-    _selectedProductIndex = index;
+    selfProductIndex = index;
     notifyListeners();
   }
 
   void toggleProductFavoriteStatus() {
-    final bool isCurrentlyFavorite = _products[_selectedProductIndex].isFavorite;
+    final bool isCurrentlyFavorite = products[selectedProductIndex].isFavorite;
     final bool newFavoriteStatus = !isCurrentlyFavorite;
     final Product updateProduct = Product(
         title: selectedProduct.title,
         description: selectedProduct.description,
         price: selectedProduct.price,
         image: selectedProduct.image,
+        userEmail: selectedProduct.userEmail,
+        userId: selectedProduct.userId,
         isFavorite: newFavoriteStatus
     );
-    _products[_selectedProductIndex] = updateProduct;
-    _selectedProductIndex = null;
+    products[selectedProductIndex] = updateProduct;
+    selfProductIndex = null;
     notifyListeners();
-    _selectedProductIndex = null;
+    selfProductIndex = null;
   }
 
   void toggleDisplayMode() {

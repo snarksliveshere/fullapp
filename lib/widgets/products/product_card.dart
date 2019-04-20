@@ -41,17 +41,18 @@ class ProductCard extends StatelessWidget {
               context, '/product/' + _productIndex.toString()),
         ),
         ScopedModelDescendant<MainModel>(
-          builder: (BuildContext context, Widget child, MainModel model) {
-            return IconButton(
-              icon: Icon(model.products[_productIndex].isFavorite ? Icons.favorite : Icons.favorite_border),
-              color: Colors.red,
-              onPressed: () {
-                model.selectProduct(_productIndex);
-                model.toggleProductFavoriteStatus();
-              },
-            );
-          }
-        )
+            builder: (BuildContext context, Widget child, MainModel model) {
+          return IconButton(
+            icon: Icon(model.products[_productIndex].isFavorite
+                ? Icons.favorite
+                : Icons.favorite_border),
+            color: Colors.red,
+            onPressed: () {
+              model.selectProduct(_productIndex);
+              model.toggleProductFavoriteStatus();
+            },
+          );
+        })
       ],
     );
   }
@@ -59,18 +60,22 @@ class ProductCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-        child: Column(
-      children: <Widget>[
-        Image.asset(this._products.image),
-        _buildTitlePriceRow(),
-        DecoratedBox(
+      child: Column(
+        children: <Widget>[
+          Image.asset(this._products.image),
+          _buildTitlePriceRow(),
+          DecoratedBox(
             decoration: BoxDecoration(
-                border: Border.all(
-                    color: Colors.grey, style: BorderStyle.solid, width: 1.0),
-                borderRadius: BorderRadius.circular(6.0)),
-            child: AddressTag('Union Square, San Francisco')),
-        _buildActionButtons(context)
-      ],
-    ));
+              border: Border.all(
+                  color: Colors.grey, style: BorderStyle.solid, width: 1.0),
+              borderRadius: BorderRadius.circular(6.0),
+            ),
+            child: AddressTag('Union Square, San Francisco'),
+          ),
+          Text(_products.userEmail),
+          _buildActionButtons(context)
+        ],
+      ),
+    );
   }
 }
