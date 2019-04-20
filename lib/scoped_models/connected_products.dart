@@ -1,5 +1,6 @@
+import 'dart:convert';
 import 'package:scoped_model/scoped_model.dart';
-
+import 'package:http/http.dart' as http;
 import '../models/product.dart';
 import '../models/user.dart';
 
@@ -7,18 +8,31 @@ mixin ConnectedProductsModel on Model {
   List<Product> _products = [];
   User _authenticatedUser;
   int _selfProductIndex;
+  static const String serverUrl = 'https://flutter-products-54c8e.firebaseio.com/';
 
   void addProduct(String title, String description, String image, double price) {
-    final Product newProduct = Product(
-        title: title,
-        description: description,
-        price: price,
-        image: image,
-        userEmail: _authenticatedUser.email,
-        userId: _authenticatedUser.id
-    );
-    _products.add(newProduct);
-    notifyListeners();
+    final Map<String, dynamic> productData = {
+      'title': title,
+      'description': description,
+      'image': 'https://www.google.ru/url?sa=i&source=images&cd=&cad=rja&uact=8&ved=2ahUKEwiCt6aF5t7hAhWuy6YKHYiaAtUQjRx6BAgBEAU&url=https%3A%2F%2Fbowwowinsurance.com.au%2Fdogs%2Fdog-breeds%2Fcollie%2F&psig=AOvVaw17f7J8Vu-5XwCa6MWFY3PY&ust=1555854015838917',
+      'price': price,
+    };
+    http.post('$serverUrl/products.json', body: jsonEncode(productData))
+        .then((http.Response response) {
+            final Map<String, dynamic> responseData = json.decode(response.body);
+            final Product newProduct = Product(
+                id: responseData['name']
+                title: title,
+                description: description,
+                price: price,
+                image: image,
+                userEmail: _authenticatedUser.email,
+                userId: _authenticatedUser.id
+            );
+            _products.add(newProduct);
+            notifyListeners();
+        });
+
   }
 
 }
