@@ -113,17 +113,34 @@ mixin ProductsModel on ConnectedProductsModel {
         });
   }
 
-  void updateProduct(String title, String description, String image, double price) {
-    final Product udpatedProduct = Product(
-        title: title,
-        description: description,
-        price: price,
-        image: image,
-        userEmail: selectedProduct.userEmail,
-        userId: selectedProduct.userId
-    );
-    _products[selectedProductIndex] = udpatedProduct;
+  Future<Null> updateProduct(String title, String description, String image, double price) {
+    _isLoading = true;
     notifyListeners();
+    final Map<String, dynamic> updatedData = {
+      'title': title,
+      'description': description,
+      'image': 'https://bowwowinsurance.com.au/wp-content/uploads/2018/10/collie-rough-700x700.jpg',
+      'price': price,
+      'userEmail': selectedProduct.userEmail,
+      'userId': selectedProduct.userId
+    };
+    return http.put(
+        '${ConnectedProductsModel.serverUrl}/products/${selectedProduct.id}.json',
+        body: json.encode(updatedData))
+        .then((http.Response response) {
+          _isLoading = false;
+          final Product updatedProduct = Product(
+              id: selectedProduct.id,
+              title: title,
+              description: description,
+              price: price,
+              image: image,
+              userEmail: selectedProduct.userEmail,
+              userId: selectedProduct.userId
+          );
+          _products[selectedProductIndex] = updatedProduct;
+          notifyListeners();
+    });
   }
 
   void selectProduct(int index) {
