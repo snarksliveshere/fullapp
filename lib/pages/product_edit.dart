@@ -94,29 +94,33 @@ class _ProductEditPageState extends State<ProductEditPage> {
     );
   }
 
-  void _submitForm(Function addProduct, Function updateProduct,
-      [int selectedProductIndex]) {
-    if (!_formKey.currentState.validate()) {
-      return;
-    }
-    _formKey.currentState.save();
-    if (selectedProductIndex == null) {
-      addProduct(
-          _formData['title'],
-          _formData['description'],
-          _formData['image'],
-          _formData['price']
-      );
-    } else {
-      updateProduct(
-          _formData['title'],
-          _formData['description'],
-          _formData['image'],
-          _formData['price'],
-      );
-    }
+  void _submitForm(
+      Function addProduct,
+      Function updateProduct,
+      Function setSelectedProduct,
+      [int selectedProductIndex]
+  ) {
+      if (!_formKey.currentState.validate()) {
+        return;
+      }
+      _formKey.currentState.save();
+      if (selectedProductIndex == null) {
+        addProduct(
+            _formData['title'],
+            _formData['description'],
+            _formData['image'],
+            _formData['price']
+        );
+      } else {
+        updateProduct(
+            _formData['title'],
+            _formData['description'],
+            _formData['image'],
+            _formData['price'],
+        );
+      }
 
-    Navigator.pushReplacementNamed(context, '/products');
+      Navigator.pushReplacementNamed(context, '/products').then((_) => setSelectedProduct(null));
   }
 
   Widget _buildPageContent(BuildContext context, Product product) {
@@ -168,8 +172,12 @@ class _ProductEditPageState extends State<ProductEditPage> {
       return RaisedButton(
           child: Text('Save'),
           // wrap in arrow - in another function to send arguments
-          onPressed: () => _submitForm(model.addProduct, model.updateProduct,
-              model.selectedProductIndex));
+          onPressed: () => _submitForm(
+              model.addProduct,
+              model.updateProduct,
+              model.selectProduct,
+              model.selectedProductIndex
+          ),);
     });
   }
 }
