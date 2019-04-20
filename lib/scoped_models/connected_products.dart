@@ -94,10 +94,10 @@ mixin ProductsModel on ConnectedProductsModel {
     });
   }
 
-  void fetchProducts() {
+  Future<Null> fetchProducts() {
     _isLoading = true;
     notifyListeners();
-    http.get('${ConnectedProductsModel.serverUrl}/products.json')
+    return http.get('${ConnectedProductsModel.serverUrl}/products.json')
         .then((http.Response response) {
           final List<Product> fetchedProductList = [];
           final Map<String, dynamic> productListData = jsonDecode(response.body);
