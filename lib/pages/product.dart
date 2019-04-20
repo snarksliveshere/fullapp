@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 import '../models/product.dart';
-import '../scoped_models/products.dart';
+import '../scoped_models/main.dart';
 import 'package:fullapp/widgets/ui_elements/title_default.dart';
 import '../widgets/products/price_tag.dart';
 import 'package:fullapp/widgets/ui_elements/address_tag.dart';
@@ -21,8 +21,8 @@ class ProductPage extends StatelessWidget {
           return Future.value(false
           );
         },
-        child: ScopedModelDescendant<ProductsModel>(
-          builder: (BuildContext context, Widget child, ProductsModel model) {
+        child: ScopedModelDescendant<MainModel>(
+          builder: (BuildContext context, Widget child, MainModel model) {
             final Product product = model.products[this.productIndex];
 
             return Scaffold(
