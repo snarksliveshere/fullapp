@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:http/http.dart' as http;
@@ -11,17 +12,18 @@ mixin ConnectedProductsModel on Model {
   static const String serverUrl = 'https://flutter-products-54c8e.firebaseio.com/';
   bool _isLoading = false;
 
-  void addProduct(String title, String description, String image, double price) {
+  Future<Null> addProduct(String title, String description, String image, double price) {
     _isLoading = true;
+    notifyListeners();
     final Map<String, dynamic> productData = {
       'title': title,
       'description': description,
-      'image': 'https://www.google.ru/url?sa=i&source=images&cd=&cad=rja&uact=8&ved=2ahUKEwiCt6aF5t7hAhWuy6YKHYiaAtUQjRx6BAgBEAU&url=https%3A%2F%2Fbowwowinsurance.com.au%2Fdogs%2Fdog-breeds%2Fcollie%2F&psig=AOvVaw17f7J8Vu-5XwCa6MWFY3PY&ust=1555854015838917',
+      'image': 'https://bowwowinsurance.com.au/wp-content/uploads/2018/10/collie-rough-700x700.jpg',
       'price': price,
       'userEmail': _authenticatedUser.email,
       'userId': _authenticatedUser.id
     };
-    http.post('$serverUrl/products.json', body: jsonEncode(productData))
+    return http.post('$serverUrl/products.json', body: jsonEncode(productData))
         .then((http.Response response) {
             _isLoading = false;
             final Map<String, dynamic> responseData = json.decode(response.body);
@@ -83,6 +85,7 @@ mixin ProductsModel on ConnectedProductsModel {
 
   void fetchProducts() {
     _isLoading = true;
+    notifyListeners();
     http.get('${ConnectedProductsModel.serverUrl}/products.json')
         .then((http.Response response) {
           final List<Product> fetchedProductList = [];
