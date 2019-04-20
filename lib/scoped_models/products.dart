@@ -3,7 +3,7 @@ import 'package:scoped_model/scoped_model.dart';
 import '../models/product.dart';
 import './connected_products.dart';
 
-mixin ProductsModel on ConnectedProducts {
+mixin ProductsModel on ConnectedProductsModel {
   bool _showFavorites = false;
 
   List<Product> get allProducts {

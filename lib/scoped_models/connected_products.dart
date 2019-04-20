@@ -3,7 +3,7 @@ import 'package:scoped_model/scoped_model.dart';
 import '../models/product.dart';
 import '../models/user.dart';
 
-mixin ConnectedProducts on Model {
+mixin ConnectedProductsModel on Model {
   List<Product> products = [];
   User authenticatedUser;
   int selfProductIndex;
