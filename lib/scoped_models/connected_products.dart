@@ -9,8 +9,10 @@ mixin ConnectedProductsModel on Model {
   User _authenticatedUser;
   int _selfProductIndex;
   static const String serverUrl = 'https://flutter-products-54c8e.firebaseio.com/';
+  bool _isLoading = false;
 
   void addProduct(String title, String description, String image, double price) {
+    _isLoading = true;
     final Map<String, dynamic> productData = {
       'title': title,
       'description': description,
@@ -21,6 +23,7 @@ mixin ConnectedProductsModel on Model {
     };
     http.post('$serverUrl/products.json', body: jsonEncode(productData))
         .then((http.Response response) {
+            _isLoading = false;
             final Map<String, dynamic> responseData = json.decode(response.body);
             final Product newProduct = Product(
                 id: responseData['name'],
@@ -79,11 +82,16 @@ mixin ProductsModel on ConnectedProductsModel {
   }
 
   void fetchProducts() {
+    _isLoading = true;
     http.get('${ConnectedProductsModel.serverUrl}/products.json')
         .then((http.Response response) {
           final List<Product> fetchedProductList = [];
           final Map<String, dynamic> productListData = jsonDecode(response.body);
-
+          if (productListData == null) {
+            _isLoading = false;
+            notifyListeners();
+            return;
+          }
           productListData.forEach((String productId, dynamic productData) {
             final Product product = Product(
               id: productId,
@@ -97,6 +105,7 @@ mixin ProductsModel on ConnectedProductsModel {
           fetchedProductList.add(product);
           });
           _products = fetchedProductList;
+          _isLoading = false;
           notifyListeners();
         });
   }
@@ -141,4 +150,8 @@ mixin ProductsModel on ConnectedProductsModel {
     _showFavorites = !_showFavorites;
     notifyListeners();
   }
+}
+
+mixin UtilityModel on ConnectedProductsModel {
+  bool get isLoading => _isLoading;
 }
