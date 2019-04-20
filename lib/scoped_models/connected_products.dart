@@ -16,12 +16,14 @@ mixin ConnectedProductsModel on Model {
       'description': description,
       'image': 'https://www.google.ru/url?sa=i&source=images&cd=&cad=rja&uact=8&ved=2ahUKEwiCt6aF5t7hAhWuy6YKHYiaAtUQjRx6BAgBEAU&url=https%3A%2F%2Fbowwowinsurance.com.au%2Fdogs%2Fdog-breeds%2Fcollie%2F&psig=AOvVaw17f7J8Vu-5XwCa6MWFY3PY&ust=1555854015838917',
       'price': price,
+      'userEmail': _authenticatedUser.email,
+      'userId': _authenticatedUser.id
     };
     http.post('$serverUrl/products.json', body: jsonEncode(productData))
         .then((http.Response response) {
             final Map<String, dynamic> responseData = json.decode(response.body);
             final Product newProduct = Product(
-                id: responseData['name']
+                id: responseData['name'],
                 title: title,
                 description: description,
                 price: price,
@@ -74,6 +76,29 @@ mixin ProductsModel on ConnectedProductsModel {
   void deleteProduct() {
     _products.removeAt(selectedProductIndex);
     notifyListeners();
+  }
+
+  void fetchProducts() {
+    http.get('${ConnectedProductsModel.serverUrl}/products.json')
+        .then((http.Response response) {
+          final List<Product> fetchedProductList = [];
+          final Map<String, dynamic> productListData = jsonDecode(response.body);
+
+          productListData.forEach((String productId, dynamic productData) {
+            final Product product = Product(
+              id: productId,
+              title: productData['title'],
+              description: productData['description'],
+              image: productData['image'],
+              price: productData['price'],
+              userEmail: productData['userEmail'],
+              userId: productData['userId'],
+            );
+          fetchedProductList.add(product);
+          });
+          _products = fetchedProductList;
+          notifyListeners();
+        });
   }
 
   void updateProduct(String title, String description, String image, double price) {
