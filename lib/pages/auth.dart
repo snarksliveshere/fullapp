@@ -71,9 +71,6 @@ class _AuthPageState extends State<AuthPage> {
           return 'Please enter the valid password';
         }
       },
-      onSaved: (String value) {
-        _formData[PASSWORD] = value;
-      },
     );
   }
 
@@ -114,13 +111,19 @@ class _AuthPageState extends State<AuthPage> {
         });
   }
 
-  void _submitForm(Function login) {
+  void _submitForm(Function login, Function signUp) async {
     if (!_formKey.currentState.validate() || !_formData[ACCEPT_TERMS]) {
       return;
     }
     _formKey.currentState.save();
-    login(_formData['email'], _formData['password']);
-    Navigator.pushReplacementNamed(context, '/products');
+    if (_authMode == AuthMode.Login) {
+      login(_formData[EMAIL], _formData[PASSWORD]);
+    } else {
+      final Map<String, dynamic> successInformation = await signUp(_formData[EMAIL], _formData[PASSWORD]);
+      if (successInformation['success']) {
+        Navigator.pushReplacementNamed(context, '/products');
+      }
+    }
   }
 
   Widget _authForm() {
@@ -160,7 +163,7 @@ class _AuthPageState extends State<AuthPage> {
                     builder: (BuildContext context, Widget child, MainModel model) {
                       return RaisedButton(
                           textColor: Colors.white,
-                          onPressed: () => _submitForm(model.login),
+                          onPressed: () => _submitForm(model.login, model.signUp),
                           child: Text('Login'));
                     },
                   ),
