@@ -22,6 +22,8 @@ mixin UserModel on ConnectedProductsModel {
   String _signUpServerUrl = 'https://www.googleapis.com/identitytoolkit/v3/relyingparty/signupNewUser?key=AIzaSyBkPxjwhCUo7U6gSY54zJ5j66aW3SLwYRY';
 
   Future<Map<String, dynamic>> signUp(String email, String password) async {
+    _isLoading = true;
+    notifyListeners();
     final Map<String, dynamic> authData = {
       'email': email,
       'password': password,
@@ -41,6 +43,8 @@ mixin UserModel on ConnectedProductsModel {
     } else if (responseData['error']['message'] == 'EMAIL_EXISTS') {
       message = 'This Email already exists';
     }
+    _isLoading = false;
+    notifyListeners();
     return {
       'success': !hasError,
       'message': message

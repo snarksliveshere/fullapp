@@ -179,10 +179,13 @@ class _AuthPageState extends State<AuthPage> {
                   SizedBox(height: 10.0),
                   ScopedModelDescendant<MainModel>(
                     builder: (BuildContext context, Widget child, MainModel model) {
-                      return RaisedButton(
+                      return model.isLoading
+                          ? Center(child: CircularProgressIndicator())
+                          : RaisedButton(
                           textColor: Colors.white,
                           onPressed: () => _submitForm(model.login, model.signUp),
-                          child: Text('Login'));
+                          child: Text(_authMode == AuthMode.Login ? 'Login' : 'Signup'))
+                      ;
                     },
                   ),
                 ],
