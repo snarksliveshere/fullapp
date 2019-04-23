@@ -44,14 +44,13 @@ mixin UserModel on ConnectedProductsModel {
       );
     }
 
-
-//    _authenticatedUser = User(id: 'sdf', email: email, password: password);
     final Map<String, dynamic> responseData = jsonDecode(response.body);
     bool hasError = true;
     String message = 'Something went wrong';
     if (responseData.containsKey('idToken')) {
       hasError = false;
       message = 'Authenticated succeeded';
+      _authenticatedUser = User(id: responseData['localId'], email: email, token: responseData['idToken']);
     } else if (responseData['error']['message'] == 'EMAIL_NOT_FOUND') {
       message = 'This Email wasn`t found';
     } else if (responseData['error']['message'] == 'INVALID_PASSWORD') {
@@ -148,7 +147,7 @@ mixin ProductsModel on ConnectedProductsModel {
     notifyListeners();
     return http
         .delete(
-            '${ConnectedProductsModel.serverUrl}/products/${deletedProductId}.json')
+            '${ConnectedProductsModel.serverUrl}/products/${deletedProductId}.json?auth=${_authenticatedUser.token}')
         .then((http.Response response) {
       _isLoading = false;
 
@@ -165,7 +164,7 @@ mixin ProductsModel on ConnectedProductsModel {
     _isLoading = true;
     notifyListeners();
     return http
-        .get('${ConnectedProductsModel.serverUrl}/products.json')
+        .get('${ConnectedProductsModel.serverUrl}/products.json?auth=${_authenticatedUser.token}')
         .then<Null>((http.Response response) {
       final List<Product> fetchedProductList = [];
       final Map<String, dynamic> productListData = jsonDecode(response.body);
@@ -213,7 +212,7 @@ mixin ProductsModel on ConnectedProductsModel {
     };
     return http
         .put(
-            '${ConnectedProductsModel.serverUrl}/products/${selectedProduct.id}.json',
+            '${ConnectedProductsModel.serverUrl}/products/${selectedProduct.id}.json?auth=${_authenticatedUser.token}',
             body: json.encode(updatedData))
         .then((http.Response response) {
       _isLoading = false;
