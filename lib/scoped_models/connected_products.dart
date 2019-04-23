@@ -84,6 +84,15 @@ mixin UserModel on ConnectedProductsModel {
       notifyListeners();
     }
   }
+
+  void logout () async {
+    _authenticatedUser = null;
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+//    prefs.clear();
+    prefs.remove('token');
+    prefs.remove('userId');
+    prefs.remove('userEmail');
+  }
 }
 
 mixin ProductsModel on ConnectedProductsModel {
