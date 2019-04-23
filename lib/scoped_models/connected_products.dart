@@ -112,7 +112,7 @@ mixin ProductsModel on ConnectedProductsModel {
     };
 
     try {
-      final http.Response response = await http.post('${ConnectedProductsModel.serverUrl}/products.json',
+      final http.Response response = await http.post('${ConnectedProductsModel.serverUrl}/products.json?auth=${_authenticatedUser.token}',
           body: jsonEncode(productData));
       if (response.statusCode != 200 && response.statusCode != 201) {
         _isLoading = false;
