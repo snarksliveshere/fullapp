@@ -11,15 +11,50 @@ mixin ConnectedProductsModel on Model {
   String _selfProductId;
   static const String serverUrl =
       'https://flutter-products-54c8e.firebaseio.com/';
+  static const String API_KEY = 'AIzaSyBkPxjwhCUo7U6gSY54zJ5j66aW3SLwYRY';
   bool _isLoading = false;
 }
 
 mixin UserModel on ConnectedProductsModel {
-  void login(String email, String password) {
-    _authenticatedUser = User(id: 'sdf', email: email, password: password);
+
+  final String _signUpServerUrl = 'https://www.googleapis.com/identitytoolkit/v3/relyingparty/signupNewUser?key=${ConnectedProductsModel.API_KEY}';
+  final String _signInServerUrl = 'https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyPassword?key=${ConnectedProductsModel.API_KEY}';
+
+  Future<Map<String, dynamic>> login(String email, String password) async {
+    _isLoading = true;
+    notifyListeners();
+    final Map<String, dynamic> authData = {
+      'email': email,
+      'password': password,
+      'returnSecureToken': true
+    };
+    http.Response response = await http.post(
+      _signInServerUrl,
+      body: jsonEncode(authData),
+      headers: {'Content-Type': 'application/json'}
+    );
+
+//    _authenticatedUser = User(id: 'sdf', email: email, password: password);
+    final Map<String, dynamic> responseData = jsonDecode(response.body);
+    bool hasError = true;
+    String message = 'Something went wrong';
+    if (responseData.containsKey('idToken')) {
+      hasError = false;
+      message = 'Authenticated succeeded';
+    } else if (responseData['error']['message'] == 'EMAIL_NOT_FOUND') {
+      message = 'This Email wasn`t found';
+    } else if (responseData['error']['message'] == 'INVALID_PASSWORD') {
+      message = 'The password is invalid';
+    }
+    _isLoading = false;
+    notifyListeners();
+    return {
+      'success': !hasError,
+      'message': message
+    };
+
+
   }
-  final apiKey = 'AIzaSyBkPxjwhCUo7U6gSY54zJ5j66aW3SLwYRY';
-  String _signUpServerUrl = 'https://www.googleapis.com/identitytoolkit/v3/relyingparty/signupNewUser?key=AIzaSyBkPxjwhCUo7U6gSY54zJ5j66aW3SLwYRY';
 
   Future<Map<String, dynamic>> signUp(String email, String password) async {
     _isLoading = true;

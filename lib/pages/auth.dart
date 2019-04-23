@@ -111,36 +111,39 @@ class _AuthPageState extends State<AuthPage> {
         });
   }
 
-  void _submitForm(Function login, Function signUp) async {
-    if (!_formKey.currentState.validate() || !_formData[ACCEPT_TERMS]) {
+  void _submitForm(Function login, Function signup) async {
+    if (!_formKey.currentState.validate() || !_formData['acceptTerms']) {
       return;
     }
     _formKey.currentState.save();
+    Map<String, dynamic> successInformation;
     if (_authMode == AuthMode.Login) {
-      login(_formData[EMAIL], _formData[PASSWORD]);
+      successInformation =
+      await login(_formData['email'], _formData['password']);
     } else {
-      final Map<String, dynamic> successInformation = await signUp(_formData[EMAIL], _formData[PASSWORD]);
-      if (successInformation['success']) {
-        Navigator.pushReplacementNamed(context, '/products');
-      } else {
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: Text('An Error occured'),
-              content: Text(successInformation['message']),
-              actions: <Widget>[
-                FlatButton(
-                  child: Text('Okay'),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                )
-              ],
-            );
-          }
-        );
-      }
+      successInformation =
+      await signup(_formData['email'], _formData['password']);
+    }
+    if (successInformation['success']) {
+      Navigator.pushReplacementNamed(context, '/products');
+    } else {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('An Error Occurred!'),
+            content: Text(successInformation['message']),
+            actions: <Widget>[
+              FlatButton(
+                child: Text('Okay'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              )
+            ],
+          );
+        },
+      );
     }
   }
 
