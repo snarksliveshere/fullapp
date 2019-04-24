@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:http/http.dart' as http;
+import 'package:rxdart/subjects.dart';
 import '../models/product.dart';
 import '../models/user.dart';
 import '../models/auth.dart';
@@ -19,11 +20,14 @@ mixin ConnectedProductsModel on Model {
 
 mixin UserModel on ConnectedProductsModel {
   Timer _authTimer;
+  PublishSubject<bool> _userSubject = PublishSubject();
 
   final String _signUpServerUrl = 'https://www.googleapis.com/identitytoolkit/v3/relyingparty/signupNewUser?key=${ConnectedProductsModel.API_KEY}';
   final String _signInServerUrl = 'https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyPassword?key=${ConnectedProductsModel.API_KEY}';
 
   User get user => _authenticatedUser;
+
+  PublishSubject<bool> get userSubject => _userSubject;
 
   Future<Map<String, dynamic>> authenticate(String email, String password, [AuthMode mode = AuthMode.Login]) async {
     _isLoading = true;
@@ -56,6 +60,7 @@ mixin UserModel on ConnectedProductsModel {
       message = 'Authenticated succeeded';
       _authenticatedUser = User(id: responseData['localId'], email: email, token: responseData['idToken']);
       setAuthTimeout(int.parse(responseData['expiresIn']));
+      _userSubject.add(true);
       final DateTime now = DateTime.now();
       final DateTime expiryTime = now.add(Duration(seconds: int.parse(responseData['expiresIn'])));
       final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -96,6 +101,7 @@ mixin UserModel on ConnectedProductsModel {
       final int tokenLifespan = parsedExpiryTime.difference(now).inSeconds;
 
       _authenticatedUser = User(id: userId, email: userEmail, token: token);
+      _userSubject.add(true);
       setAuthTimeout(tokenLifespan);
       notifyListeners();
     }
@@ -114,9 +120,12 @@ mixin UserModel on ConnectedProductsModel {
   void setAuthTimeout(int time) {
     _authTimer = Timer(
       Duration(
-        milliseconds: time
+        seconds: time
       ),
-      logout
+      () {
+        logout();
+        _userSubject.add(false);
+      }
     );
   }
 }
