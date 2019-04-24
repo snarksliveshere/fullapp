@@ -301,9 +301,10 @@ mixin ProductsModel on ConnectedProductsModel {
     }
   }
 
-  void toggleProductFavoriteStatus() {
+  void toggleProductFavoriteStatus() async {
     final bool isCurrentlyFavorite = selectedProduct.isFavorite;
     final bool newFavoriteStatus = !isCurrentlyFavorite;
+    final String urlGetCertainProduct = 'https://flutter-products-54c8e.firebaseio.com/products';
     final Product updateProduct = Product(
         id: selectedProduct.id,
         title: selectedProduct.title,
@@ -315,6 +316,27 @@ mixin ProductsModel on ConnectedProductsModel {
         isFavorite: newFavoriteStatus);
     _products[selectedProductIndex] = updateProduct;
     notifyListeners();
+    http.Response response;
+    if (newFavoriteStatus) {
+       response = await http.put('${urlGetCertainProduct}/${selectedProduct.id}/wishlistUser/${_authenticatedUser.id}.json?auth=${_authenticatedUser.token}',
+        body: jsonEncode(true)
+      );
+    } else {
+      response = await http.delete('${urlGetCertainProduct}/${selectedProduct.id}/wishlistUser/${_authenticatedUser.id}.json?auth=${_authenticatedUser.token}');
+    }
+    if (response.statusCode != 200 && response.statusCode != 201) {
+      final Product updateProduct = Product(
+          id: selectedProduct.id,
+          title: selectedProduct.title,
+          description: selectedProduct.description,
+          price: selectedProduct.price,
+          image: selectedProduct.image,
+          userEmail: selectedProduct.userEmail,
+          userId: selectedProduct.userId,
+          isFavorite: !newFavoriteStatus);
+      _products[selectedProductIndex] = updateProduct;
+      notifyListeners();
+    }
   }
 
   int get selectedProductIndex {
