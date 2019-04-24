@@ -242,6 +242,9 @@ mixin ProductsModel on ConnectedProductsModel {
           price: productData['price'],
           userEmail: productData['userEmail'],
           userId: productData['userId'],
+          isFavorite: productData['wishlistUser'] == null
+              ? false
+              : (productData['wishlistUser'] as Map<String, dynamic>).containsKey(_authenticatedUser.id)
         );
         fetchedProductList.add(product);
       });
