@@ -15,6 +15,7 @@
 *.ipr
 *.iws
 .idea/
+functions/node_modules
 
 # Visual Studio Code related
 .vscode/

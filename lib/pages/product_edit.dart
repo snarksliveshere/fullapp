@@ -24,8 +24,21 @@ class _ProductEditPageState extends State<ProductEditPage> {
   final _titleFocusNode = FocusNode();
   final _descriptionFocusNode = FocusNode();
   final _priceFocusNode = FocusNode();
+  final _descriptionTextController = TextEditingController();
 
   Widget _buildTitleTextField(Product product) {
+
+//    if (product == null && _descriptionTextController.text.trim() == '') {
+//      _descriptionTextController.text = '';
+//    } else if (product != null && _descriptionTextController.text.trim() == '') {
+//      _descriptionTextController.text = product.description;
+//    } else if (product != null && _descriptionTextController.text.trim() != '') {
+//      _descriptionTextController.text = _descriptionTextController.text;
+//    } else if (product == null && _descriptionTextController.text.trim() != '') {
+//      _descriptionTextController.text = _descriptionTextController.text;
+//    } else {
+//      _descriptionTextController.text = '';
+//    } _title instead description, of course
     return EnsureVisibleWhenFocused(
       focusNode: _titleFocusNode,
       child: TextFormField(
@@ -50,14 +63,27 @@ class _ProductEditPageState extends State<ProductEditPage> {
   }
 
   Widget _buildDescriptionTextField(Product product) {
+    // scared sheet
+    if (product == null && _descriptionTextController.text.trim() == '') {
+      _descriptionTextController.text = '';
+    } else if (product != null && _descriptionTextController.text.trim() == '') {
+      _descriptionTextController.text = product.description;
+    }
+//    else if (product != null && _descriptionTextController.text.trim() != '') {
+//      _descriptionTextController.text = _descriptionTextController.text;
+//    } else if (product == null && _descriptionTextController.text.trim() != '') {
+//      _descriptionTextController.text = _descriptionTextController.text;
+//    }
+
     return EnsureVisibleWhenFocused(
       focusNode: _descriptionFocusNode,
       child: TextFormField(
+        controller: _descriptionTextController,
         focusNode: _descriptionFocusNode,
         decoration: InputDecoration(
           labelText: 'Product description',
         ),
-        initialValue: product == null ? '' : product.description,
+//        initialValue: product == null ? '' : product.description,
         validator: (String value) {
           if (value.isEmpty || value.length <= 9) {
             return 'Description is required and should be 10+ characters long';
@@ -105,7 +131,7 @@ class _ProductEditPageState extends State<ProductEditPage> {
     if (selectedProductIndex == -1) {
       addProduct(
           _formData['title'],
-          _formData['description'],
+          _descriptionTextController.text,
           _formData['image'],
           _formData['price'])
           .then((bool success) {
@@ -133,7 +159,7 @@ class _ProductEditPageState extends State<ProductEditPage> {
     } else {
       updateProduct(
         _formData['title'],
-        _formData['description'],
+        _descriptionTextController.text,
         _formData['image'],
         _formData['price'],
       ).then((_) => Navigator.pushReplacementNamed(context, '/products')
