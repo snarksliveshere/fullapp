@@ -41,7 +41,11 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<key>NSLocationWhenInUseUsageDescription</key>
-        <string>Using location to display on a map</string>
+    <string>Using location to display on a map</string>
+    <key>NSPhotoLibraryUsageDescription</key>
+    <string>Image is used as a product image</string>
+    <key>NSCameraUsageDescription</key>
+    <string>Gallery image is used in product</string>
 	<false/>
 </dict>
 </plist>
