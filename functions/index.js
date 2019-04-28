@@ -96,3 +96,14 @@ return fbAdmin
 return busboy.end(req.rawBody);
 });
 });
+
+
+exports.deleteImage = functions.database
+    .ref('/products/{productId}')
+    .onDelete( snapshot => {
+    const imageData = snapshot.val();
+const imagePath = imageData.imagePath;
+
+const bucket = gcs.bucket('flutter-products-54c8e.appspot.com');
+return bucket.file(imagePath).delete();
+});
