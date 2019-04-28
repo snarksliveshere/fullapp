@@ -1,11 +1,9 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:scoped_model/scoped_model.dart';
 import '../models/product.dart';
-import '../scoped_models/main.dart';
-import 'package:fullapp/widgets/ui_elements/title_default.dart';
+import '../widgets/ui_elements/title_default.dart';
+import '../widgets/ui_elements/address_tag.dart';
 import '../widgets/products/price_tag.dart';
-import 'package:fullapp/widgets/ui_elements/address_tag.dart';
 
 class ProductPage extends StatelessWidget {
   final Product product;

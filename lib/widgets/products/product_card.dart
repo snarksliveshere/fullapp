@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 import './price_tag.dart';
-import 'package:fullapp/widgets/ui_elements/address_tag.dart';
-import 'package:fullapp/widgets/ui_elements/title_default.dart';
+import '../ui_elements/address_tag.dart';
+import '../ui_elements/title_default.dart';
 import '../../models/product.dart';
 import '../../scoped_models/main.dart';
 

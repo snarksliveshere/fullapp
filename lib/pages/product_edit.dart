@@ -4,6 +4,7 @@ import 'package:scoped_model/scoped_model.dart';
 import '../widgets/helpers/ensure-visible.dart';
 import '../models/product.dart';
 import '../scoped_models/main.dart';
+import '../widgets/form_inputs/image.dart';
 
 class ProductEditPage extends StatefulWidget {
   @override
@@ -156,9 +157,9 @@ class _ProductEditPageState extends State<ProductEditPage> {
             _buildDescriptionTextField(product),
             _buildPriceTextField(product),
             // occupied some space ~ height & width
-            SizedBox(
-              height: 10.0,
-            ),
+            SizedBox(height: 10.0),
+            ImageInput(),
+            SizedBox(height:  10.0),
             _buildSubmitButton(product),
           ],
         ),
