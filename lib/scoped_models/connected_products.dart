@@ -209,8 +209,6 @@ mixin ProductsModel on ConnectedProductsModel {
     final Map<String, dynamic> productData = {
       'title': title,
       'description': description,
-      'image':
-          'https://bowwowinsurance.com.au/wp-content/uploads/2018/10/collie-rough-700x700.jpg',
       'price': price,
       'imagePath': uploadData['imagePath'],
       'imageUrl': uploadData['imageUrl'],
@@ -234,6 +232,7 @@ mixin ProductsModel on ConnectedProductsModel {
           description: description,
           price: price,
           image: uploadData['imageUrl'],
+          imagePath: uploadData['imagePath'],
           userEmail: _authenticatedUser.email,
           userId: _authenticatedUser.id);
       _products.add(newProduct);
@@ -285,7 +284,8 @@ mixin ProductsModel on ConnectedProductsModel {
           id: productId,
           title: productData['title'],
           description: productData['description'],
-          image: productData['image'],
+          image: productData['imageUrl'],
+          imagePath: productData['imagePath'],
           price: productData['price'],
           userEmail: productData['userEmail'],
           userId: productData['userId'],
@@ -312,40 +312,55 @@ mixin ProductsModel on ConnectedProductsModel {
   }
 
   Future<bool> updateProduct(
-      String title, String description, String image, double price) {
+      String title, String description, File image, double price) async {
     _isLoading = true;
     notifyListeners();
+    String imageUrl = selectedProduct.image;
+    String imagePath = selectedProduct.imagePath;
+    if (image != null) {
+      final uploadData = await this.uploadImage(image);
+      if (uploadData == null) {
+        print('upload failed');
+        return false;
+      }
+
+      imageUrl = uploadData['imageUrl'];
+      imagePath = uploadData['imagePath'];
+    }
+
     final Map<String, dynamic> updatedData = {
       'title': title,
       'description': description,
-      'image':
-          'https://bowwowinsurance.com.au/wp-content/uploads/2018/10/collie-rough-700x700.jpg',
+      'imageUrl': imageUrl,
+      'imagePath': imagePath,
       'price': price,
       'userEmail': selectedProduct.userEmail,
       'userId': selectedProduct.userId
     };
-    return http
-        .put(
-            '${ConnectedProductsModel.serverUrl}/products/${selectedProduct.id}.json?auth=${_authenticatedUser.token}',
-            body: json.encode(updatedData))
-        .then((http.Response response) {
+
+    try {
+      final http.Response response = await http
+          .put(
+          '${ConnectedProductsModel.serverUrl}/products/${selectedProduct.id}.json?auth=${_authenticatedUser.token}',
+          body: json.encode(updatedData));
       _isLoading = false;
       final Product updatedProduct = Product(
           id: selectedProduct.id,
           title: title,
           description: description,
           price: price,
-          image: image,
+          image: imageUrl,
+          imagePath: imagePath,
           userEmail: selectedProduct.userEmail,
           userId: selectedProduct.userId);
       _products[selectedProductIndex] = updatedProduct;
       notifyListeners();
       return true;
-    }).catchError((error) {
+    } catch (error) {
       _isLoading = false;
       notifyListeners();
       return false;
-    });
+    }
   }
 
   void selectProduct(String productId) {
@@ -365,6 +380,7 @@ mixin ProductsModel on ConnectedProductsModel {
         description: selectedProduct.description,
         price: selectedProduct.price,
         image: selectedProduct.image,
+        imagePath: selectedProduct.imagePath,
         userEmail: selectedProduct.userEmail,
         userId: selectedProduct.userId,
         isFavorite: newFavoriteStatus);
@@ -385,6 +401,7 @@ mixin ProductsModel on ConnectedProductsModel {
           description: selectedProduct.description,
           price: selectedProduct.price,
           image: selectedProduct.image,
+          imagePath: selectedProduct.imagePath,
           userEmail: selectedProduct.userEmail,
           userId: selectedProduct.userId,
           isFavorite: !newFavoriteStatus);
