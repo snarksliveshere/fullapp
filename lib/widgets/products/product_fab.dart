@@ -1,3 +1,4 @@
+import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -90,7 +91,19 @@ class _ProductFabState extends State<ProductFab> with TickerProviderStateMixin {
                 child: FloatingActionButton(
                     mini: true,
                     heroTag: 'options',
-                    child: Icon(Icons.more_vert),
+                    child: AnimatedBuilder(
+                        builder: (BuildContext context, Widget child) {
+                          return Transform(
+                              child: Icon(_controller.isDismissed
+                                  ? Icons.more_vert
+                                  : Icons.close
+                              ),
+                              alignment: FractionalOffset.center,
+                              transform: Matrix4.rotationZ(_controller.value * 0.5 * math.pi),
+                          );
+                        },
+                        animation: _controller,
+                      ),
                     onPressed: () {
                       if (_controller.isDismissed) {
                         _controller.forward();
