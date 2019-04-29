@@ -39,8 +39,13 @@ class ProductCard extends StatelessWidget {
               IconButton(
                 icon: Icon(Icons.info),
                 color: Theme.of(context).accentColor,
-                onPressed: () => Navigator.pushNamed<bool>(
-                    context, '/product/' + model.allProducts[_productIndex].id),
+                onPressed: () {
+                  model.selectProduct(model.allProducts[_productIndex].id);
+                  Navigator.pushNamed<bool>(
+                      context, '/product/' + model.allProducts[_productIndex].id)
+                      .then((_) => model.selectProduct(null))
+                  ;
+                }
               ),
               IconButton(
                   icon: Icon(model.allProducts[_productIndex].isFavorite
@@ -77,7 +82,7 @@ class ProductCard extends StatelessWidget {
             ),
             child: AddressTag('Union Square, San Francisco'),
           ),
-          Text(_products.userEmail),
+//          Text(_products.userEmail),
           _buildActionButtons(context)
         ],
       ),

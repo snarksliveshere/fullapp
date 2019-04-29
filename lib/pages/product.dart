@@ -4,6 +4,7 @@ import '../models/product.dart';
 import '../widgets/ui_elements/title_default.dart';
 import '../widgets/ui_elements/address_tag.dart';
 import '../widgets/products/price_tag.dart';
+import '../widgets/products/product_fab.dart';
 
 class ProductPage extends StatelessWidget {
   final Product product;
@@ -20,8 +21,9 @@ class ProductPage extends StatelessWidget {
           );
         },
         child: Scaffold(
-              appBar: AppBar(title: Text(product.title)),
-              body: _showProductAttributes(context, product),
+            appBar: AppBar(title: Text(product.title)),
+            body: _showProductAttributes(context, product),
+            floatingActionButton: ProductFab(product)
         ),
     );
   }
