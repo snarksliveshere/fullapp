@@ -15,8 +15,17 @@ class ProductFab extends StatefulWidget {
   }
 }
 
-class _ProductFabState extends State<ProductFab> {
+class _ProductFabState extends State<ProductFab> with TickerProviderStateMixin {
+  AnimationController _controller;
 
+  @override
+  void initState() {
+    _controller = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 200)
+    );
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return ScopedModelDescendant(
@@ -29,19 +38,25 @@ class _ProductFabState extends State<ProductFab> {
                 height: 70.0,
                 width: 56.0,
                 alignment: FractionalOffset.topCenter,
-                child: FloatingActionButton(
-                    backgroundColor: Theme.of(context).cardColor,
-                    mini: true,
-                    heroTag: 'contact',
-                    child: Icon(Icons.mail, color: Theme.of(context).primaryColor,),
-                    onPressed: () async {
-                      final url = 'mailto:${widget.product.userEmail}';
-                      if (await canLaunch(url)) {
-                        await launch(url);
-                      } else {
-                        throw 'Could not launch';
+                child: ScaleTransition(
+                  scale: CurvedAnimation(
+                      parent: _controller,
+                      curve: Interval(0.0, 1.0, curve: Curves.easeOut)
+                  ),
+                  child: FloatingActionButton(
+                      backgroundColor: Theme.of(context).cardColor,
+                      mini: true,
+                      heroTag: 'contact',
+                      child: Icon(Icons.mail, color: Theme.of(context).primaryColor,),
+                      onPressed: () async {
+                        final url = 'mailto:${widget.product.userEmail}';
+                        if (await canLaunch(url)) {
+                          await launch(url);
+                        } else {
+                          throw 'Could not launch';
+                        }
                       }
-                    }
+                  ),
                 ),
               ),
               Container(
@@ -71,7 +86,11 @@ class _ProductFabState extends State<ProductFab> {
                     heroTag: 'options',
                     child: Icon(Icons.more_vert),
                     onPressed: () {
-
+                      if (_controller.isDismissed) {
+                        _controller.forward();
+                      } else {
+                        _controller.reverse();
+                      }
                     }
                 ),
               ),
