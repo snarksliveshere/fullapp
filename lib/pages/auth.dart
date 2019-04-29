@@ -25,12 +25,21 @@ class _AuthPageState extends State<AuthPage> with TickerProviderStateMixin {
   final TextEditingController _passwordTextController = TextEditingController();
   AuthMode _authMode = AuthMode.Login;
   AnimationController _controller;
+  Animation<Offset> _slideAnimation;
 
   @override
   void initState() {
     _controller = AnimationController(
       vsync: this,
       duration: Duration(milliseconds: 300)
+    );
+    _slideAnimation = Tween<Offset>(
+      begin: Offset(0.0, -1.5),
+      end: Offset.zero
+    ).animate(CurvedAnimation(
+        parent: _controller,
+        curve: Curves.fastOutSlowIn
+      )
     );
     super.initState();
   }
@@ -71,17 +80,20 @@ class _AuthPageState extends State<AuthPage> with TickerProviderStateMixin {
           parent: _controller,
           curve: Curves.easeIn
       ),
-      child: TextFormField(
-        keyboardType: TextInputType.emailAddress,
-        obscureText: true,
-        decoration: InputDecoration(
-            labelText: 'Confirm password', filled: true, fillColor: Colors.white
+      child: SlideTransition(
+        position: _slideAnimation,
+        child: TextFormField(
+          keyboardType: TextInputType.emailAddress,
+          obscureText: true,
+          decoration: InputDecoration(
+              labelText: 'Confirm password', filled: true, fillColor: Colors.white
+          ),
+          validator: (String value) {
+            if (_passwordTextController.text != value && _authMode == AuthMode.Signup) {
+              return 'Please enter the valid password';
+            }
+          },
         ),
-        validator: (String value) {
-          if (_passwordTextController.text != value && _authMode == AuthMode.Signup) {
-            return 'Please enter the valid password';
-          }
-        },
       ),
     );
   }
