@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../scoped_models/main.dart';
 import '../../models/product.dart';
 
@@ -33,8 +34,13 @@ class _ProductFabState extends State<ProductFab> {
                     mini: true,
                     heroTag: 'contact',
                     child: Icon(Icons.mail, color: Theme.of(context).primaryColor,),
-                    onPressed: () {
-
+                    onPressed: () async {
+                      final url = 'mailto:${widget.product.userEmail}';
+                      if (await canLaunch(url)) {
+                        await launch(url);
+                      } else {
+                        throw 'Could not launch';
+                      }
                     }
                 ),
               ),
@@ -46,9 +52,14 @@ class _ProductFabState extends State<ProductFab> {
                     backgroundColor: Theme.of(context).cardColor,
                     mini: true,
                     heroTag: 'favorite',
-                    child: Icon(Icons.favorite, color: Colors.red,),
+                    child: Icon(
+                      model.selectedProduct.isFavorite
+                          ? Icons.favorite
+                          : Icons.favorite_border,
+                      color: Colors.red,
+                    ),
                     onPressed: () {
-
+                      model.toggleProductFavoriteStatus();
                     }
                 ),
               ),
