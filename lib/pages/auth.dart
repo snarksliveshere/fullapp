@@ -11,7 +11,7 @@ class AuthPage extends StatefulWidget {
   }
 }
 
-class _AuthPageState extends State<AuthPage> {
+class _AuthPageState extends State<AuthPage> with TickerProviderStateMixin {
   static const String EMAIL = 'email';
   static const String PASSWORD = 'password';
   static const String ACCEPT_TERMS = 'acceptTerms';
@@ -24,6 +24,16 @@ class _AuthPageState extends State<AuthPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _passwordTextController = TextEditingController();
   AuthMode _authMode = AuthMode.Login;
+  AnimationController _controller;
+
+  @override
+  void initState() {
+    _controller = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 300)
+    );
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -56,17 +66,23 @@ class _AuthPageState extends State<AuthPage> {
   }
 
   Widget _buildPasswordConfirmTextField() {
-    return TextFormField(
-      keyboardType: TextInputType.emailAddress,
-      obscureText: true,
-      decoration: InputDecoration(
-          labelText: 'Confirm password', filled: true, fillColor: Colors.white
+    return FadeTransition(
+      opacity: CurvedAnimation(
+          parent: _controller,
+          curve: Curves.easeIn
       ),
-      validator: (String value) {
-        if (_passwordTextController.text != value) {
-          return 'Please enter the valid password';
-        }
-      },
+      child: TextFormField(
+        keyboardType: TextInputType.emailAddress,
+        obscureText: true,
+        decoration: InputDecoration(
+            labelText: 'Confirm password', filled: true, fillColor: Colors.white
+        ),
+        validator: (String value) {
+          if (_passwordTextController.text != value && _authMode == AuthMode.Signup) {
+            return 'Please enter the valid password';
+          }
+        },
+      ),
     );
   }
 
@@ -157,15 +173,23 @@ class _AuthPageState extends State<AuthPage> {
                   SizedBox(height: 10.0,),
                   _buildPasswordTextField(),
                   SizedBox(height: 10.0),
-                  _authMode == AuthMode.Signup ? _buildPasswordConfirmTextField() : Container(),
+                  _buildPasswordConfirmTextField(),
                   _buildAcceptSwitch(),
                   FlatButton(
                     child: Text('Switch to ${_authMode == AuthMode.Login ? 'Signup' : 'login'}'),
                     onPressed: () {
                       setState(() {
-                        _authMode = _authMode == AuthMode.Login
-                            ? AuthMode.Signup
-                            : AuthMode.Login;
+                        if (_authMode == AuthMode.Login) {
+                          setState(() {
+                            _authMode = AuthMode.Signup;
+                          });
+                          _controller.forward();
+                        } else {
+                          setState(() {
+                            _authMode = AuthMode.Login;
+                          });
+                          _controller.reverse();
+                        }
                       });
                     },
                   ),
