@@ -72,6 +72,7 @@ class ProductPage extends StatelessWidget {
               _buildAddressPriceRow(product.price),
               Container(
                 padding: EdgeInsets.all(10.0),
+                alignment: Alignment.center,
                 child: Text(
                   product.description,
                   textAlign: TextAlign.center,
