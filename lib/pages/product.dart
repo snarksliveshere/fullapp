@@ -48,31 +48,38 @@ class ProductPage extends StatelessWidget {
   }
 
   Widget _showProductAttributes(BuildContext context, Product product) {
-    return Center(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            FadeInImage(
-              image: NetworkImage(product.image),
-              placeholder: AssetImage('assets/background.jpg'),
-              height: 300.0,
-              fit: BoxFit.cover,
-            ),
-            TitleDefault(title: product.title
-            ),
-            _buildAddressPriceRow(product.price
-            ),
-            Container(
-              padding: EdgeInsets.all(10.0
+    return CustomScrollView(
+      slivers: <Widget>[
+        SliverAppBar(
+          expandedHeight: 256.0,
+          pinned: true,
+          flexibleSpace: FlexibleSpaceBar(
+            title: Text(product.title),
+            background: Hero(
+              tag: product.id,
+              child: FadeInImage(
+                image: NetworkImage(product.image),
+                placeholder: AssetImage('assets/background.jpg'),
+                height: 300.0,
+                fit: BoxFit.cover,
               ),
-              child: Text(
-                product.description,
-                textAlign: TextAlign.center,
-              ),
-//              alignment: Alignment.center,
-            )
-          ],
+            ),
+          ),
+        ),
+        SliverList(
+          delegate: SliverChildListDelegate([
+              TitleDefault(title: product.title),
+              _buildAddressPriceRow(product.price),
+              Container(
+                padding: EdgeInsets.all(10.0),
+                child: Text(
+                  product.description,
+                  textAlign: TextAlign.center,
+                ),
+              )
+          ]),
         )
+      ],
     );
   }
 
