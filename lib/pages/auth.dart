@@ -3,6 +3,7 @@ import 'package:scoped_model/scoped_model.dart';
 
 import '../scoped_models/main.dart';
 import '../models/auth.dart';
+import '../widgets/ui_elements/adaptive_progress_indicator.dart';
 
 class AuthPage extends StatefulWidget {
   @override
@@ -209,7 +210,7 @@ class _AuthPageState extends State<AuthPage> with TickerProviderStateMixin {
                   ScopedModelDescendant<MainModel>(
                     builder: (BuildContext context, Widget child, MainModel model) {
                       return model.isLoading
-                          ? Center(child: CircularProgressIndicator())
+                          ? Center(child: AdaptiveProgressIndicator())
                           : RaisedButton(
                           textColor: Colors.white,
                           onPressed: () => _submitForm(model.authenticate),
