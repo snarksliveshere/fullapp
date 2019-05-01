@@ -76,6 +76,7 @@ class ProductCard extends StatelessWidget {
             ),
           ),
           _buildTitlePriceRow(),
+          SizedBox(height: 10.0,),
           DecoratedBox(
             decoration: BoxDecoration(
               border: Border.all(

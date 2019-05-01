@@ -12,6 +12,7 @@ import 'package:http_parser/http_parser.dart';
 import '../models/product.dart';
 import '../models/user.dart';
 import '../models/auth.dart';
+import '../app_config/config.dart';
 
 mixin ConnectedProductsModel on Model {
   List<Product> _products = [];
@@ -19,7 +20,7 @@ mixin ConnectedProductsModel on Model {
   String _selfProductId;
   static const String serverUrl =
       'https://flutter-products-54c8e.firebaseio.com/';
-  static const String API_KEY = 'AIzaSyBkPxjwhCUo7U6gSY54zJ5j66aW3SLwYRY';
+  static const String API_KEY = firebaseApiKey;
   bool _isLoading = false;
 }
 
@@ -254,7 +255,7 @@ mixin ProductsModel on ConnectedProductsModel {
     notifyListeners();
     return http
         .delete(
-            '${ConnectedProductsModel.serverUrl}/products/${deletedProductId}.json?auth=${_authenticatedUser.token}')
+            '${ConnectedProductsModel.serverUrl}/products/$deletedProductId.json?auth=${_authenticatedUser.token}')
         .then((http.Response response) {
       _isLoading = false;
 
@@ -343,7 +344,7 @@ mixin ProductsModel on ConnectedProductsModel {
     };
 
     try {
-      final http.Response response = await http
+      await http
           .put(
           '${ConnectedProductsModel.serverUrl}/products/${selectedProduct.id}.json?auth=${_authenticatedUser.token}',
           body: json.encode(updatedData));
@@ -392,11 +393,11 @@ mixin ProductsModel on ConnectedProductsModel {
     notifyListeners();
     http.Response response;
     if (newFavoriteStatus) {
-       response = await http.put('${urlGetCertainProduct}/${selectedProduct.id}/wishlistUser/${_authenticatedUser.id}.json?auth=${_authenticatedUser.token}',
+       response = await http.put('$urlGetCertainProduct/${selectedProduct.id}/wishlistUser/${_authenticatedUser.id}.json?auth=${_authenticatedUser.token}',
         body: jsonEncode(true)
       );
     } else {
-      response = await http.delete('${urlGetCertainProduct}/${selectedProduct.id}/wishlistUser/${_authenticatedUser.id}.json?auth=${_authenticatedUser.token}');
+      response = await http.delete('$urlGetCertainProduct/${selectedProduct.id}/wishlistUser/${_authenticatedUser.id}.json?auth=${_authenticatedUser.token}');
     }
     if (response.statusCode != 200 && response.statusCode != 201) {
       final Product updateProduct = Product(

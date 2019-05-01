@@ -117,7 +117,7 @@ class _ProductEditPageState extends State<ProductEditPage> {
         keyboardType: TextInputType.number,
         validator: (String value) {
           if (value.isEmpty ||
-              !RegExp(r'^(?:[1-9]\d*|0)?(?:\.\d+)?$').hasMatch(value)) {
+              !RegExp(r'^(?:[1-9]\d*|0)?(?:[\.,]\d+)?$').hasMatch(value)) {
             return 'Price is required and should be number';
           }
         },
