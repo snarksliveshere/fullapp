@@ -10,6 +10,7 @@ import './pages/products_admin.dart';
 import './pages/products.dart';
 import './pages/product.dart';
 import './models/product.dart';
+import './app_config/adaptive_theme.dart';
 
 void main() {
 //  debugPaintSizeEnabled = true;
@@ -40,29 +41,13 @@ class _MyAppState extends State<MyApp> {
      super.initState();
    }
 
-  ThemeData _appConfig() {
-    return ThemeData(
-        brightness: Brightness.light,
-        primarySwatch: Colors.deepOrange,
-        accentColor: Colors.deepPurple,
-        backgroundColor: Colors.white,
-        buttonColor: Colors.blue,
-        buttonTheme: ButtonThemeData(
-            textTheme: ButtonTextTheme.accent
-//          textTheme: TextTheme(button: TextStyle(color: Colors.white))
-        )
-//        fontFamily: 'Oswald'
-    );
-  }
-
-
   @override
   Widget build(BuildContext context) {
     return ScopedModel<MainModel>(
       model: _model,
       child: MaterialApp(
 //      debugShowMaterialGrid: true,
-        theme: _appConfig(),
+        theme: getAdaptiveThemeData(context),
 //      home: AuthPage(),
         routes: {
           '/': (BuildContext context) => !_isAuthenticated ?  AuthPage() : ProductsPage(_model),
