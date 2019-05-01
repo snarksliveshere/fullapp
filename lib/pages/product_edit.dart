@@ -26,6 +26,7 @@ class _ProductEditPageState extends State<ProductEditPage> {
   final _descriptionFocusNode = FocusNode();
   final _priceFocusNode = FocusNode();
   final _descriptionTextController = TextEditingController();
+  final _priceTextController = TextEditingController();
 
   Widget _buildTitleTextField(Product product) {
 
@@ -99,9 +100,15 @@ class _ProductEditPageState extends State<ProductEditPage> {
   }
 
   Widget _buildPriceTextField(Product product) {
+//    if (product == null && _priceTextController.text.trim() == '') {
+//      _priceTextController.text = '';
+//    } else if (product != null && _priceTextController.text.trim() == '') {
+//      _priceTextController.text = product.price.toString();
+//    }
     return EnsureVisibleWhenFocused(
       focusNode: _priceFocusNode,
       child: TextFormField(
+//        controller: _priceTextController,
         focusNode: _priceFocusNode,
         decoration: InputDecoration(
           labelText: 'Product price',
@@ -134,7 +141,8 @@ class _ProductEditPageState extends State<ProductEditPage> {
           _formData['title'],
           _descriptionTextController.text,
           _formData['image'],
-          _formData['price'])
+          double.parse(_priceTextController.text)
+      )
           .then((bool success) {
             if (success) {
               Navigator.pushReplacementNamed(context, '/products')
@@ -162,7 +170,7 @@ class _ProductEditPageState extends State<ProductEditPage> {
         _formData['title'],
         _descriptionTextController.text,
         _formData['image'],
-        _formData['price'],
+        double.parse(_priceTextController.text),
       ).then((_) => Navigator.pushReplacementNamed(context, '/products')
           .then((_) => setSelectedProduct(null)) );
     }
