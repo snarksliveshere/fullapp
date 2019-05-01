@@ -141,7 +141,8 @@ class _ProductEditPageState extends State<ProductEditPage> {
           _formData['title'],
           _descriptionTextController.text,
           _formData['image'],
-          double.parse(_priceTextController.text)
+//          double.parse(_priceTextController.text)
+        _formData['price'],
       )
           .then((bool success) {
             if (success) {
@@ -170,7 +171,8 @@ class _ProductEditPageState extends State<ProductEditPage> {
         _formData['title'],
         _descriptionTextController.text,
         _formData['image'],
-        double.parse(_priceTextController.text),
+//        double.parse(_priceTextController.text),
+        _formData['price'],
       ).then((_) => Navigator.pushReplacementNamed(context, '/products')
           .then((_) => setSelectedProduct(null)) );
     }
