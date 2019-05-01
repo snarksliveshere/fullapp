@@ -409,6 +409,7 @@ mixin ProductsModel on ConnectedProductsModel {
       _products[selectedProductIndex] = updateProduct;
       notifyListeners();
     }
+    _selfProductId = null;
   }
 
   int get selectedProductIndex {
