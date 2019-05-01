@@ -184,18 +184,14 @@ mixin ProductsModel on ConnectedProductsModel {
       final streamedResponse = await imageUploadRequest.send();
       final response = await http.Response.fromStream(streamedResponse);
       if (response.statusCode != 200 && response.statusCode != 201) {
-        print('response wrong');
-        print(json.decode(response.body));
         return null;
       }
       final responseData = json.decode(response.body);
       return responseData;
 
     } catch (error) {
-      print(error);
       return null;
     }
-
   }
 
   Future<bool> addProduct(
@@ -205,7 +201,6 @@ mixin ProductsModel on ConnectedProductsModel {
 
     final uploadData = await this.uploadImage(image);
     if (uploadData == null) {
-      print('upload failed');
       return false;
     }
     final Map<String, dynamic> productData = {
@@ -325,7 +320,6 @@ mixin ProductsModel on ConnectedProductsModel {
     if (image != null) {
       final uploadData = await this.uploadImage(image);
       if (uploadData == null) {
-        print('upload failed');
         return false;
       }
 

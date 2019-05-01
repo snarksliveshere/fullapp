@@ -66,7 +66,7 @@ class _ProductsPageState extends State<ProductsPage> {
     return Scaffold(
       drawer: _buildSideDrawer(context),
       appBar: AppBar(
-        title: Text('EasyList'),
+        title: Text('AdList'),
         actions: <Widget>[
           ScopedModelDescendant(
             builder: (BuildContext context, Widget child, MainModel model) {

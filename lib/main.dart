@@ -46,9 +46,9 @@ class _MyAppState extends State<MyApp> {
     return ScopedModel<MainModel>(
       model: _model,
       child: MaterialApp(
+        title: 'Adlist',
 //      debugShowMaterialGrid: true,
         theme: getAdaptiveThemeData(context),
-//      home: AuthPage(),
         routes: {
           '/': (BuildContext context) => !_isAuthenticated ?  AuthPage() : ProductsPage(_model),
           '/admin': (BuildContext context) => !_isAuthenticated ?  AuthPage() : ProductsAdmin(_model),
@@ -59,7 +59,6 @@ class _MyAppState extends State<MyApp> {
                 builder: (BuildContext context) => AuthPage()
             );
           }
-
           final List<String> pathElements = settings.name.split('/'); // '/product' '/' '1'
           if (pathElements[0] != '') {
             return null;
