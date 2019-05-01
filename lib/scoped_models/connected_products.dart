@@ -269,6 +269,7 @@ mixin ProductsModel on ConnectedProductsModel {
 
   Future<Null> fetchProducts({onlyForUser: false}) {
     _isLoading = true;
+    _products = [];
     notifyListeners();
     return http
         .get('${ConnectedProductsModel.serverUrl}/products.json?auth=${_authenticatedUser.token}')
@@ -409,7 +410,7 @@ mixin ProductsModel on ConnectedProductsModel {
       _products[selectedProductIndex] = updateProduct;
       notifyListeners();
     }
-    _selfProductId = null;
+//    _selfProductId = null;
   }
 
   int get selectedProductIndex {
